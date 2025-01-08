@@ -8,7 +8,7 @@ export default function HomeLayout({
   return (
     <div>
       <TopNavBar />
-      {children}
+      <div className="w-full h-full bg-white dark:bg-gray-900">{children}</div>
     </div>
   );
 }

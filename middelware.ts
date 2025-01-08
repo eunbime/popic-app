@@ -1,44 +1,45 @@
-import { NextResponse } from "next/server";
 import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
 
+// 보호된 라우트를 위한 미들웨어
 export default withAuth(
   function middleware(req) {
-    const isAuthPage = req.nextUrl.pathname.startsWith("/auth");
-    const isWelcomePage = req.nextUrl.pathname === "/welcome";
-    const isLoggedIn = !!req.nextauth.token;
+    const { pathname } = req.nextUrl;
+    const isAuthPage = pathname.startsWith("/auth");
+    const isPublicPath = pathname === "/" || isAuthPage;
 
-    // 로그인한 사용자가 auth나 welcome 페이지 접근 시 settings로 리다이렉트
-    if (isLoggedIn && (isAuthPage || isWelcomePage)) {
-      return NextResponse.redirect(new URL("/", req.url));
+    // 로그인한 사용자가 공개 페이지 접근 시
+    if (req.nextauth.token && isPublicPath) {
+      return NextResponse.redirect(new URL("/social/feed", req.url));
     }
-
-    // 로그인하지 않은 사용자가 auth나 welcome 페이지가 아닌 곳에 접근 시
-    if (!isLoggedIn && !isAuthPage && !isWelcomePage) {
-      return NextResponse.redirect(new URL("/welcome", req.url));
-    }
-
-    return NextResponse.next();
   },
   {
     callbacks: {
+      // false를 반환하면 /auth/login으로 리다이렉트됨
       authorized: ({ req, token }) => {
-        const isAuthPage = req.nextUrl.pathname.startsWith("/auth");
-        const isWelcomePage = req.nextUrl.pathname === "/welcome";
+        const { pathname } = req.nextUrl;
+        const isAuthPage = pathname.startsWith("/auth");
+        const isPublicPath = pathname === "/" || isAuthPage;
 
-        // auth 페이지나 welcome 페이지는 토큰 없이 접근 가능
-        if (isAuthPage || isWelcomePage) {
+        // 공개 페이지는 토큰 없이 접근 가능
+        if (isPublicPath) {
           return true;
         }
+
+        // 그 외 페이지는 토큰이 있어야 접근 가능
         return !!token;
       },
     },
   }
 );
+
+// 미들웨어가 적용될 경로 설정
 export const config = {
   matcher: [
-    "/welcome",
-    "/auth/login",
-    "/auth/register",
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+    // 보호할 경로 지정
+    "/social/:path*",
+    // 공개 경로 지정
+    "/",
+    "/auth/:path*",
   ],
 };

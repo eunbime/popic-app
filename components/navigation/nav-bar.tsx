@@ -1,20 +1,27 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { IoHeart, IoHome, IoPeople } from "react-icons/io5";
 
 const NavBar = () => {
+  const pathname = usePathname();
   const router = useRouter();
 
   const handleClick = (path: string) => {
     router.push(path);
   };
 
+  const isAuth = ["/", "/auth/login", "/auth/register"].includes(pathname);
+
+  if (isAuth) {
+    return null;
+  }
+
   return (
     <div className="fixed bottom-0 left-0 w-full h-[50px]">
-      <div className="max-w-[490px] mx-auto h-full flex justify-between items-center px-10 bg-white">
+      <div className="max-w-[430px] mx-auto h-full flex justify-between items-center px-10 border-gray-200 bg-white dark:bg-gray-800 shadow-md shadow-gray-500 dark:shadow-gray-800">
         <div className="w-[50px] h-[50px] text-black flex justify-center items-center cursor-pointer">
-          <IoHome size={30} onClick={() => handleClick("/")} />
+          <IoHome size={30} onClick={() => handleClick("/gallery")} />
         </div>
         <div className="w-[50px] h-[50px] text-black flex justify-center items-center cursor-pointer">
           <IoPeople size={30} onClick={() => handleClick("/social/feed")} />

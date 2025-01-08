@@ -11,14 +11,18 @@ const Header = () => {
     router.push(path);
   };
 
-  const isHome =
-    pathname === "/" || pathname === "/gallery" || pathname === "/calendar";
+  const isAuth = ["/", "/auth/login", "/auth/register"].includes(pathname);
+  const isHome = ["/gallery", "/calendar"].includes(pathname);
   const isFeed = pathname === "/social/feed";
   const isLike = pathname === "/social/like";
   const isSettings = pathname === "/settings";
 
+  if (isAuth) {
+    return null;
+  }
+
   return (
-    <div className="w-full h-[50px] dark:bg-white dark:text-black flex justify-between items-center px-5">
+    <div className="w-full h-[50px] bg-white dark:bg-gray-900 flex justify-between items-center px-5 border-b border-gray-200">
       <div className="flex justify-center items-center">
         <p onClick={() => handleClick(pathname)} className="cursor-pointer">
           {isHome

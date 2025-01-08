@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const TopNavBar = () => {
   return (
-    <div className="w-full h-[30px]  flex justify-center items-center border-t">
+    <div className="w-full h-[30px] flex justify-center items-center border-b">
       <Link
         href={"/gallery"}
         className="flex flex-1 justify-center items-center border-r"

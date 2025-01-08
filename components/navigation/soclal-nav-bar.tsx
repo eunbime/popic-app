@@ -11,7 +11,7 @@ const SocialNavBar = () => {
   };
 
   return (
-    <div className="w-full h-[30px]  flex justify-center items-center border-t">
+    <div className="w-full h-[30px]  flex justify-center items-center border-b border-gray-200">
       <div
         onClick={() => handleClick("all")}
         className="flex flex-1 justify-center items-center border-r cursor-pointer"
