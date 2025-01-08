@@ -8,7 +8,9 @@ export default function SocialLayout({
   return (
     <div>
       <SocialNavBar />
-      {children}
+      <div className="w-full h-full bg-white dark:bg-gray-900 pb-[80px]">
+        {children}
+      </div>
     </div>
   );
 }

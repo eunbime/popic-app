@@ -4,6 +4,8 @@ export default function ProductLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="w-full h-full bg-white dark:bg-gray-900">{children}</div>
+    <div className="pt-[50px] w-full h-full bg-white dark:bg-gray-900">
+      {children}
+    </div>
   );
 }
