@@ -22,22 +22,24 @@ const Header = () => {
   }
 
   return (
-    <div className="w-full h-[50px] bg-white dark:bg-gray-900 flex justify-between items-center px-5 border-b border-gray-200">
-      <div className="flex justify-center items-center">
-        <p onClick={() => handleClick(pathname)} className="cursor-pointer">
-          {isHome
-            ? "Home"
-            : isFeed
-            ? "Feed"
-            : isLike
-            ? "Like"
-            : isSettings
-            ? "Settings"
-            : ""}
-        </p>
-      </div>
-      <div className="flex justify-center items-center cursor-pointer">
-        <IoSettings size={30} onClick={() => handleClick("/settings")} />
+    <div className="fixed top-0 left-0 w-full h-[50px]">
+      <div className="max-w-[430px] mx-auto h-full bg-white dark:bg-gray-900 flex justify-between items-center px-5 border-b border-gray-200">
+        <div className="flex justify-center items-center">
+          <p onClick={() => handleClick(pathname)} className="cursor-pointer">
+            {isHome
+              ? "Home"
+              : isFeed
+              ? "Feed"
+              : isLike
+              ? "Like"
+              : isSettings
+              ? "Settings"
+              : ""}
+          </p>
+        </div>
+        <div className="flex justify-center items-center cursor-pointer">
+          <IoSettings size={30} onClick={() => handleClick("/settings")} />
+        </div>
       </div>
     </div>
   );

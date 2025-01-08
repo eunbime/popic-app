@@ -32,7 +32,9 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <Header />
-          {children}
+          <div className="pt-[50px] w-full h-full bg-white dark:bg-black">
+            {children}
+          </div>
           <NavBar />
         </ThemeProvider>
       </body>

@@ -1,4 +1,4 @@
-import Carousel from "@/components/gallery/carousel";
+import CarouselBox from "@/components/gallery/carousel-box";
 import Profile from "@/components/gallery/profile";
 import Timeline from "@/components/gallery/timeline";
 
@@ -7,7 +7,7 @@ export default function GalleryPage() {
     <div className="flex flex-col w-full h-full">
       <Profile />
       <div className="w-full h-full">
-        <Carousel />
+        <CarouselBox />
         <Timeline />
       </div>
     </div>

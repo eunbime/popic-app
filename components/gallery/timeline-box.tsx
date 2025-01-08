@@ -2,7 +2,8 @@ import Image from "next/image";
 
 const TimelineBox = () => {
   return (
-    <div className="w-[350px] h-[400px] bg-gray-200 mx-auto mt-5">
+    <div className="w-[350px] h-[430px] mx-auto mt-5">
+      <p className="text-md font-bold">YYYY.MM.DD</p>
       <Image
         src="https://via.placeholder.com/350x350?text=photo"
         alt="gallery"
