@@ -7,3 +7,17 @@ body,
 :root {
   height: 100%;
 }
+
+body {
+  max-width: 430px; /* iPhone 14 Pro Max 기준 */
+  margin: 0 auto; /* 중앙 정렬 */
+  position: relative;
+}
+
+body {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
