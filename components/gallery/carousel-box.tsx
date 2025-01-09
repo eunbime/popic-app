@@ -7,7 +7,7 @@ const CarouselBox = () => {
   const { openModal, setType } = useModal();
 
   const handleOpenModal = () => {
-    setType("gallery");
+    setType("post-upload");
     openModal();
   };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -17,6 +17,9 @@ import { PostUploadSchema } from "@/schemas";
 import PrivateSwitch from "@/components/gallery/private-switch";
 
 const PostUploadModal = () => {
+  const { isOpen, closeModal, type, data: post } = useModal();
+  const user = useUser((state) => state.user);
+
   const queryClient = useQueryClient();
   const { mutate: uploadPost, isPending } = useMutation({
     mutationFn: (data: z.infer<typeof PostUploadSchema>) => {
@@ -30,19 +33,37 @@ const PostUploadModal = () => {
     },
   });
 
-  const user = useUser((state) => state.user);
-  const { isOpen, closeModal, type } = useModal();
+  const { mutate: editPost, isPending: isEditPending } = useMutation({
+    mutationFn: (data: z.infer<typeof PostUploadSchema & { id: string }>) => {
+      return axios.put(`/api/posts/${post?.id}`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
 
   const form = useForm<z.infer<typeof PostUploadSchema>>({
     resolver: zodResolver(PostUploadSchema),
     defaultValues: {
-      title: "",
-      content: "",
-      date: new Date(),
-      imageUrl: "",
-      isPrivate: false,
+      title: post?.title || "",
+      content: post?.content || "",
+      date: post?.date || new Date(),
+      imageUrl: post?.imageUrl || "",
+      isPrivate: post?.isPrivate || false,
     },
   });
+
+  useEffect(() => {
+    if (post) {
+      form.reset({
+        title: post.title,
+        content: post.content,
+        date: new Date(post.date), // 문자열을 Date 객체로 변환
+        imageUrl: post.imageUrl,
+        isPrivate: post.isPrivate,
+      });
+    }
+  }, [post]);
 
   const handleCloseModal = () => {
     form.reset();
@@ -51,14 +72,21 @@ const PostUploadModal = () => {
 
   const onSubmit = async (data: z.infer<typeof PostUploadSchema>) => {
     try {
-      uploadPost(data);
+      if (post?.id) {
+        editPost({
+          ...data,
+          id: post?.id,
+        });
+      } else {
+        uploadPost(data);
+      }
       handleCloseModal();
     } catch (error) {
       console.log(error);
     }
   };
 
-  if (!isOpen || type !== "gallery") return null;
+  if (!isOpen || type !== "post-upload") return null;
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
@@ -74,7 +102,17 @@ const PostUploadModal = () => {
           </button>
         </div>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={(e) => {
+            e.preventDefault();
+            console.log("폼 제출 시도");
+            console.log("폼 에러:", form.formState.errors); // 에러 확인
+            console.log("폼 값:", form.getValues()); // 현재 폼 값 확인
+
+            form.handleSubmit((data) => {
+              console.log("validation 통과!");
+              onSubmit(data);
+            })(e);
+          }}
           className="flex flex-col items-center justify-center gap-4"
         >
           {/* 이미지 업로드 영역 */}
@@ -113,7 +151,7 @@ const PostUploadModal = () => {
             </div>
           </div>
           <Button type="submit" disabled={isPending}>
-            {isPending ? "Uploading..." : "Upload"}
+            {post ? "Edit" : "Upload"}
           </Button>
         </form>
       </div>

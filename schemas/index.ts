@@ -31,4 +31,5 @@ export const PostUploadSchema = z.object({
   date: z.date().optional(),
   imageUrl: z.string().optional(),
   isPrivate: z.boolean(),
+  id: z.string().optional(),
 });

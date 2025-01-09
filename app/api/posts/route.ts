@@ -3,7 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const posts = await db.post.findMany();
+    const posts = await db.post.findMany({
+      orderBy: {
+        date: "asc",
+      },
+    });
     return NextResponse.json(posts);
   } catch (error) {
     console.log("[POSTS_GET_ERROR]", error);
