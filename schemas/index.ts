@@ -20,3 +20,15 @@ export const RegisterSchema = z.object({
     message: "Name is required",
   }),
 });
+
+export const PostUploadSchema = z.object({
+  title: z.string().min(1, {
+    message: "Title is required",
+  }),
+  content: z.string().min(1, {
+    message: "content is required",
+  }),
+  date: z.date().optional(),
+  imageUrl: z.string().optional(),
+  isPrivate: z.boolean(),
+});
