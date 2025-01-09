@@ -9,11 +9,11 @@ import { z } from "zod";
 
 import useModal from "@/store/modal/modal-store";
 import useUser from "@/store/user/user-store.";
+import { PostUploadSchema } from "@/schemas";
 import DatePicker from "@/components/gallery/date-picker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { PostUploadSchema } from "@/schemas";
 import PrivateSwitch from "@/components/gallery/private-switch";
 
 const PostUploadModal = () => {
@@ -30,6 +30,7 @@ const PostUploadModal = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["post-dates"] });
     },
   });
 
@@ -39,6 +40,7 @@ const PostUploadModal = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["post-dates"] });
     },
   });
 
@@ -58,7 +60,7 @@ const PostUploadModal = () => {
       form.reset({
         title: post.title,
         content: post.content,
-        date: new Date(post.date), // 문자열을 Date 객체로 변환
+        date: new Date(post.date),
         imageUrl: post.imageUrl as string,
         isPrivate: post.isPrivate,
       });
@@ -102,17 +104,7 @@ const PostUploadModal = () => {
           </button>
         </div>
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            console.log("폼 제출 시도");
-            console.log("폼 에러:", form.formState.errors); // 에러 확인
-            console.log("폼 값:", form.getValues()); // 현재 폼 값 확인
-
-            form.handleSubmit((data) => {
-              console.log("validation 통과!");
-              onSubmit(data);
-            })(e);
-          }}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col items-center justify-center gap-4"
         >
           {/* 이미지 업로드 영역 */}
