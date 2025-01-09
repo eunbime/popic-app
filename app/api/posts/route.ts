@@ -31,5 +31,12 @@ export async function POST(req: NextRequest) {
     },
   });
 
+  if (!post) {
+    return NextResponse.json(
+      { message: "Failed to create post" },
+      { status: 500 }
+    );
+  }
+
   return NextResponse.json({ message: "Post uploaded" });
 }

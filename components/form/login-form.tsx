@@ -46,7 +46,7 @@ const LoginForm = () => {
         placeholder="Password"
         {...form.register("password")}
       />
-      <Button variant="ghost" type="submit">
+      <Button variant="ghost" type="submit" disabled={isPending}>
         Login
       </Button>
     </form>

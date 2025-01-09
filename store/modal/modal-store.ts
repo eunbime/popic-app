@@ -1,3 +1,4 @@
+import { Post } from "@prisma/client";
 import { create } from "zustand";
 
 export type ModalType = "post-upload" | "profile" | "timeline" | "post-view";
@@ -8,8 +9,8 @@ interface ModalState {
   isOpen: boolean;
   openModal: () => void;
   closeModal: () => void;
-  data: any;
-  setData: (data: any) => void;
+  data: Post | null;
+  setData: (data: Post | null) => void;
 }
 
 const useModal = create<ModalState>((set) => ({

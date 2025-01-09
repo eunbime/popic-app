@@ -5,6 +5,8 @@ import { formatDateForTimeline } from "@/lib/formatDate";
 import { Button } from "../ui/button";
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import useModal from "@/store/modal/modal-store";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 
 interface TimelineBoxProps {
   post: Post;
@@ -12,6 +14,16 @@ interface TimelineBoxProps {
 
 const TimelineBox = ({ post }: TimelineBoxProps) => {
   const { openModal, setType, setData } = useModal();
+  const queryClient = useQueryClient();
+
+  const { mutate: deletePost, isPending: isDeletePending } = useMutation({
+    mutationFn: async () => {
+      await axios.delete(`/api/posts/${post.id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
 
   const handleClick = () => {
     console.log("!!!");
@@ -29,7 +41,7 @@ const TimelineBox = ({ post }: TimelineBoxProps) => {
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    console.log("delete");
+    deletePost();
   };
 
   return (
@@ -51,7 +63,7 @@ const TimelineBox = ({ post }: TimelineBoxProps) => {
         <Button type="button" onClick={handleEdit}>
           <PencilIcon className="w-4 h-4" />
         </Button>
-        <Button type="button" onClick={handleDelete}>
+        <Button type="button" onClick={handleDelete} disabled={isDeletePending}>
           <Trash2Icon className="w-4 h-4" />
         </Button>
       </div>

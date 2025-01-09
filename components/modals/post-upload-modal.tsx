@@ -59,11 +59,11 @@ const PostUploadModal = () => {
         title: post.title,
         content: post.content,
         date: new Date(post.date), // 문자열을 Date 객체로 변환
-        imageUrl: post.imageUrl,
+        imageUrl: post.imageUrl as string,
         isPrivate: post.isPrivate,
       });
     }
-  }, [post]);
+  }, [post, form]);
 
   const handleCloseModal = () => {
     form.reset();
@@ -150,7 +150,7 @@ const PostUploadModal = () => {
               />
             </div>
           </div>
-          <Button type="submit" disabled={isPending}>
+          <Button type="submit" disabled={isPending || isEditPending}>
             {post ? "Edit" : "Upload"}
           </Button>
         </form>
