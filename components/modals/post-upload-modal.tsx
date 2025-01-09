@@ -1,21 +1,36 @@
 "use client";
 
 import React from "react";
-import DatePicker from "../gallery/date-picker";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { useForm } from "react-hook-form";
-import { PostUploadSchema } from "@/schemas";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import PrivateSwitch from "../gallery/private-switch";
+import { useForm } from "react-hook-form";
 import axios from "axios";
-import useUser from "@/store/user/user-store.";
-import useModal from "@/store/modal/modal-store";
-const PostUploadModal = () => {
-  const user = useUser((state) => state.user);
+import { z } from "zod";
 
+import useModal from "@/store/modal/modal-store";
+import useUser from "@/store/user/user-store.";
+import DatePicker from "@/components/gallery/date-picker";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { PostUploadSchema } from "@/schemas";
+import PrivateSwitch from "@/components/gallery/private-switch";
+
+const PostUploadModal = () => {
+  const queryClient = useQueryClient();
+  const { mutate: uploadPost, isPending } = useMutation({
+    mutationFn: (data: z.infer<typeof PostUploadSchema>) => {
+      return axios.post("/api/posts", {
+        ...data,
+        authorId: user?.id,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
+
+  const user = useUser((state) => state.user);
   const { isOpen, closeModal, type } = useModal();
 
   const form = useForm<z.infer<typeof PostUploadSchema>>({
@@ -29,16 +44,15 @@ const PostUploadModal = () => {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof PostUploadSchema>) => {
-    console.log("제출된 데이터:", data);
+  const handleCloseModal = () => {
+    form.reset();
+    closeModal();
+  };
 
+  const onSubmit = async (data: z.infer<typeof PostUploadSchema>) => {
     try {
-      const res = await axios.post("/api/posts", {
-        ...data,
-        authorId: user?.id,
-      });
-      closeModal();
-      console.log(res);
+      uploadPost(data);
+      handleCloseModal();
     } catch (error) {
       console.log(error);
     }
@@ -51,7 +65,13 @@ const PostUploadModal = () => {
       <div className="w-[400px] h-[800px] bg-white rounded-md">
         <div className="flex justify-between items-center p-4 border-b border-gray-200 mb-5">
           <h1 className="text-2xl font-bold">Upload Post</h1>
-          <button className="text-2xl font-bold">X</button>
+          <button
+            className="text-2xl font-bold"
+            onClick={handleCloseModal}
+            type="button"
+          >
+            X
+          </button>
         </div>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -92,7 +112,9 @@ const PostUploadModal = () => {
               />
             </div>
           </div>
-          <Button type="submit">Upload</Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "Uploading..." : "Upload"}
+          </Button>
         </form>
       </div>
     </div>

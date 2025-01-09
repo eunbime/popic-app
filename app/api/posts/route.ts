@@ -1,6 +1,19 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
+export async function GET() {
+  try {
+    const posts = await db.post.findMany();
+    return NextResponse.json(posts);
+  } catch (error) {
+    console.log("[POSTS_GET_ERROR]", error);
+    return NextResponse.json(
+      { message: "Failed to fetch posts" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(req: NextRequest) {
   const data = await req.json();
 

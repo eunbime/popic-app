@@ -7,6 +7,7 @@ import Header from "@/components/header";
 import { auth } from "@/lib/auth";
 import ModalProvider from "@/components/providers/modal-provider";
 import { UserInitializer } from "@/components/providers/user-initializer";
+import QueryProvider from "@/components/providers/query-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,9 +40,13 @@ export default async function RootLayout({
         <ThemeProvider>
           <Header />
           <UserInitializer user={session?.user} />
-          <ModalProvider />
-          <div className="w-full h-full bg-white dark:bg-black">{children}</div>
-          <NavBar />
+          <QueryProvider>
+            <ModalProvider />
+            <div className="w-full h-full bg-white dark:bg-black text-black dark:text-white">
+              {children}
+            </div>
+            <NavBar />
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

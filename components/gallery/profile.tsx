@@ -19,7 +19,9 @@ const Profile = async () => {
           />
         </div>
         <div className="flex flex-col w-[230px] h-[100px] bg-gray-200 rounded-lg px-4 py-3 gap-2">
-          <span className="text-sm font-bold">{session?.user?.name}</span>
+          <span className="text-sm font-bold text-gray-900">
+            {session?.user?.name}
+          </span>
           <p className="text-sm text-gray-500 ">
             {session?.user?.bio ?? "바이오가 작성되지 않았습니다."}
           </p>
