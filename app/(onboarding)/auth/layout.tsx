@@ -1,3 +1,5 @@
+import BackButton from "@/components/back-button";
+
 export default function AuthLayout({
   children,
 }: Readonly<{
@@ -5,6 +7,7 @@ export default function AuthLayout({
 }>) {
   return (
     <div className="w-full h-full flex items-center justify-center">
+      <BackButton />
       {children}
     </div>
   );

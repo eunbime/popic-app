@@ -1,45 +1,33 @@
-import { withAuth } from "next-auth/middleware";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import authConfig from "./lib/auth.config";
+import NextAuth from "next-auth";
 
-// 보호된 라우트를 위한 미들웨어
-export default withAuth(
-  function middleware(req) {
-    const { pathname } = req.nextUrl;
-    const isAuthPage = pathname.startsWith("/auth");
-    const isPublicPath = pathname === "/" || isAuthPage;
+const { auth } = NextAuth(authConfig);
 
-    // 로그인한 사용자가 공개 페이지 접근 시
-    if (req.nextauth.token && isPublicPath) {
-      return NextResponse.redirect(new URL("/social/feed", req.url));
-    }
-  },
-  {
-    callbacks: {
-      // false를 반환하면 /auth/login으로 리다이렉트됨
-      authorized: ({ req, token }) => {
-        const { pathname } = req.nextUrl;
-        const isAuthPage = pathname.startsWith("/auth");
-        const isPublicPath = pathname === "/" || isAuthPage;
+export default auth(async function middleware(req: NextRequest) {
+  const session = await auth();
+  const isAuthPage = req.nextUrl.pathname.startsWith("/auth");
+  const isPublicPath = req.nextUrl.pathname === "/" || isAuthPage;
 
-        // 공개 페이지는 토큰 없이 접근 가능
-        if (isPublicPath) {
-          return true;
-        }
+  console.log({ session });
 
-        // 그 외 페이지는 토큰이 있어야 접근 가능
-        return !!token;
-      },
-    },
+  if (!session?.user?.email && !isPublicPath) {
+    return NextResponse.redirect(new URL("/auth/login", req.url));
   }
-);
+
+  // 로그인한 사용자가 공개 페이지 접근 시
+  if (session?.user && isPublicPath) {
+    return NextResponse.redirect(new URL("/gallery", req.url));
+  }
+
+  return NextResponse.next();
+});
 
 // 미들웨어가 적용될 경로 설정
 export const config = {
   matcher: [
-    // 보호할 경로 지정
-    "/social/:path*",
-    // 공개 경로 지정
     "/",
     "/auth/:path*",
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };
