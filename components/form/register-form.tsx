@@ -50,7 +50,7 @@ const RegisterForm = () => {
         type="password"
         placeholder="Confirm Password"
       />
-      <Button variant="ghost" type="submit">
+      <Button variant="ghost" type="submit" disabled={isPending}>
         Register
       </Button>
     </form>
