@@ -40,3 +40,19 @@ export const PostUploadSchema = z.object({
   isPrivate: z.boolean(),
   id: z.string().optional(),
 });
+
+export const ProfileSchema = z.object({
+  name: z.string().min(1, {
+    message: "Name is required",
+  }),
+  bio: z.string().optional(),
+  image: z
+    .string({
+      required_error: "이미지를 업로드해주세요.",
+    })
+    .nullable()
+    .refine((val) => val !== null, {
+      message: "이미지를 업로드해주세요.",
+    })
+    .nullable(),
+});
