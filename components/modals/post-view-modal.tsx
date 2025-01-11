@@ -7,8 +7,11 @@ import { Button } from "../ui/button";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import useUser from "@/store/user/user-store.";
 
 const PostUploadModal = () => {
+  const { user } = useUser();
+
   const { isOpen, closeModal, type, data: post, setType } = useModal();
   const queryClient = useQueryClient();
 
@@ -66,12 +69,14 @@ const PostUploadModal = () => {
               {post?.content}
             </p>
           </div>
-          <div className="flex justify-end items-center gap-2">
-            <Button onClick={handleEdit}>Edit</Button>
-            <Button onClick={handleDelete} disabled={isDeletePending}>
-              Delete
-            </Button>
-          </div>
+          {user?.id === post?.authorId && (
+            <div className="flex justify-end items-center gap-2">
+              <Button onClick={handleEdit}>Edit</Button>
+              <Button onClick={handleDelete} disabled={isDeletePending}>
+                Delete
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

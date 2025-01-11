@@ -15,7 +15,7 @@ export default auth((req) => {
 
   // 인증 안된 사용자가 인증이 필요한 페이지에 접근하려 할 때
   if (!isLoggedIn && !isPublicPath) {
-    return Response.redirect(new URL("/auth/login", req.url));
+    return Response.redirect(new URL("/", req.url));
   }
 });
 
