@@ -9,14 +9,16 @@ export async function GET(request: Request) {
       return Response.json([]);
     }
 
-    // 날짜 문자열에서 시간을 제외한 부분만 사용
-    const date = new Date(dateStr).toISOString().split("T")[0];
+    // KST 기준 시작/종료 시간 설정
+    const date = new Date(dateStr);
+    const startDate = new Date(date.setHours(0, 0, 0, 0));
+    const endDate = new Date(date.setHours(23, 59, 59, 999));
 
     const posts = await db.post.findMany({
       where: {
         date: {
-          gte: new Date(`${date}T00:00:00.000Z`),
-          lt: new Date(`${date}T23:59:59.999Z`),
+          gte: startDate,
+          lt: endDate,
         },
       },
       orderBy: {

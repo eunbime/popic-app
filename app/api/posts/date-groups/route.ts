@@ -17,7 +17,11 @@ export async function GET() {
     // 날짜별로 그룹화
     const groupedPosts = posts.reduce(
       (groups: { [key: string]: number }, post) => {
-        const date = new Date(post.date).toISOString().split("T")[0];
+        // UTC 날짜를 KST(UTC+9)로 변환
+        const utcDate = new Date(post.date);
+        const kstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
+        const date = kstDate.toISOString().split("T")[0];
+
         groups[date] = (groups[date] || 0) + 1;
         return groups;
       },
@@ -29,11 +33,11 @@ export async function GET() {
       date,
       count,
       thumbnailUrl:
-        posts.find(
-          (post) =>
-            new Date(post.date).toISOString().split("T")[0] === date &&
-            post.imageUrl
-        )?.imageUrl || null,
+        posts.find((post) => {
+          const utcDate = new Date(post.date);
+          const kstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
+          return kstDate.toISOString().split("T")[0] === date && post.imageUrl;
+        })?.imageUrl || null,
     }));
 
     return Response.json(dateGroups);

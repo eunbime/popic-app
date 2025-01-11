@@ -21,7 +21,7 @@ const TimelineBox = ({ post }: TimelineBoxProps) => {
       await axios.delete(`/api/posts/${post.id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts-by-date"] });
     },
   });
 
