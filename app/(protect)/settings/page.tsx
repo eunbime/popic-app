@@ -1,11 +1,20 @@
-"use client";
-
-import { signOut } from "next-auth/react";
+import { signOut } from "@/lib/auth";
+import Link from "next/link";
 
 export default function Settings() {
+  const handleLogout = async () => {
+    "use server";
+    await signOut();
+  };
+
   return (
-    <div>
-      <button onClick={() => signOut()}>Logout</button>
+    <div className="flex flex-col w-full h-full justify-start items-start border-b divide-y divide-gray-200 ">
+      <Link className="w-full p-4" href="/settings/profile">
+        Profile
+      </Link>
+      <span className="w-full p-4" onClick={handleLogout}>
+        Logout
+      </span>
     </div>
   );
 }
