@@ -8,18 +8,22 @@ import "swiper/css/pagination";
 import type { Swiper as SwiperType } from "swiper";
 import { useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getDateGroups } from "@/api/posts";
+import { getDateGroupsByUserId } from "@/api/posts";
 import CarouselCard from "./carousel-card";
 import usePosts from "@/store/posts/posts-store";
 import { cn } from "@/lib/utils";
 
-const Carousel = () => {
+interface CarouselProps {
+  userId: string;
+}
+
+const Carousel = ({ userId }: CarouselProps) => {
   const swiperRef = useRef<SwiperType>(null);
   const { selectedDate, setSelectedDate } = usePosts();
 
   const { data: dateGroups } = useQuery({
     queryKey: ["post-dates"],
-    queryFn: () => getDateGroups(),
+    queryFn: () => getDateGroupsByUserId(userId),
   });
 
   return (

@@ -2,12 +2,16 @@
 
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
-import { getUser } from "@/api/user";
+import { getUserById } from "@/api/user";
 
-const Profile = () => {
+interface ProfileProps {
+  userId: string;
+}
+
+const Profile = ({ userId }: ProfileProps) => {
   const { data: userData } = useQuery({
     queryKey: ["user"],
-    queryFn: () => getUser(),
+    queryFn: () => getUserById(userId),
   });
 
   return (

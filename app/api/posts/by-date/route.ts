@@ -4,6 +4,11 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const dateStr = searchParams.get("date");
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      return Response.json([]);
+    }
 
     if (!dateStr) {
       return Response.json([]);
@@ -16,6 +21,7 @@ export async function GET(request: Request) {
 
     const posts = await db.post.findMany({
       where: {
+        authorId: userId as string,
         date: {
           gte: startDate,
           lt: endDate,

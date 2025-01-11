@@ -8,8 +8,6 @@ const PostList = () => {
     queryFn: getFeedPosts,
   });
 
-  console.log(posts);
-
   if (isLoading) return <div>Loading...</div>;
 
   return (

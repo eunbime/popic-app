@@ -10,7 +10,9 @@ export default auth((req) => {
 
   // 인증된 사용자가 인증 페이지에 접근하려 할 때
   if (isAuthPage && isLoggedIn) {
-    return Response.redirect(new URL("/gallery", req.url));
+    return Response.redirect(
+      new URL(`/gallery/${req.auth?.user?.id}`, req.url)
+    );
   }
 
   // 인증 안된 사용자가 인증이 필요한 페이지에 접근하려 할 때

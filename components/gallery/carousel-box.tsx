@@ -3,7 +3,11 @@
 import useModal from "@/store/modal/modal-store";
 import Carousel from "./carousel";
 
-const CarouselBox = () => {
+interface CarouselBoxProps {
+  userId: string;
+}
+
+const CarouselBox = ({ userId }: CarouselBoxProps) => {
   const { openModal, setType } = useModal();
 
   const handleOpenModal = () => {
@@ -13,7 +17,7 @@ const CarouselBox = () => {
 
   return (
     <div className="flex w-full h-[100px] justify-between">
-      <Carousel />
+      <Carousel userId={userId} />
       <button
         onClick={handleOpenModal}
         className="w-[80px] h-full rounded-md bg-gray-500 mr-3"
