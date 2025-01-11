@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getDateGroups } from "@/api/posts";
 import CarouselCard from "./carousel-card";
 import usePosts from "@/store/posts/posts-store";
+import { cn } from "@/lib/utils";
 
 const Carousel = () => {
   const swiperRef = useRef<SwiperType>(null);
@@ -48,13 +49,14 @@ const Carousel = () => {
           </SwiperSlide>
         ))}
       </Swiper>
-      {/* 커스텀 화살표 */}
+
       <button
         onClick={() => swiperRef.current?.slidePrev()}
-        className="absolute left-3 top-1/2 -translate-y-1/2 z-10 
-                   w-10 h-10 flex items-center justify-center 
-                   bg-white/50 rounded-full 
-                   hover:bg-white/80"
+        className={cn(
+          "absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white/50 rounded-full hover:bg-white/80",
+          dateGroups?.length && dateGroups?.length < 4 && "opacity-0"
+        )}
+        disabled={dateGroups && dateGroups.length < 4}
       >
         ←
       </button>

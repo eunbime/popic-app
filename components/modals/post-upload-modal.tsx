@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { z } from "zod";
 
+import { cn } from "@/lib/utils";
 import useModal from "@/store/modal/modal-store";
 import useUser from "@/store/user/user-store.";
 import { PostUploadSchema } from "@/schemas";
@@ -15,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import PrivateSwitch from "@/components/gallery/private-switch";
+import FileUpload from "@/components/file-upload";
 
 const PostUploadModal = () => {
   const { isOpen, closeModal, type, data: post } = useModal();
@@ -29,7 +31,9 @@ const PostUploadModal = () => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({
+        queryKey: ["posts-by-date"],
+      });
       queryClient.invalidateQueries({ queryKey: ["post-dates"] });
     },
   });
@@ -39,7 +43,9 @@ const PostUploadModal = () => {
       return axios.put(`/api/posts/${post?.id}`, data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({
+        queryKey: ["posts-by-date"],
+      });
       queryClient.invalidateQueries({ queryKey: ["post-dates"] });
     },
   });
@@ -54,6 +60,8 @@ const PostUploadModal = () => {
       isPrivate: post?.isPrivate || false,
     },
   });
+
+  form.watch("imageUrl");
 
   useEffect(() => {
     if (post) {
@@ -92,12 +100,18 @@ const PostUploadModal = () => {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-      <div className="w-[400px] h-[800px] bg-white rounded-md">
+      <div
+        className="w-[400px] h-full bg-white rounded-md"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex justify-between items-center p-4 border-b border-gray-200 mb-5">
           <h1 className="text-2xl font-bold">Upload Post</h1>
           <button
             className="text-2xl font-bold"
-            onClick={handleCloseModal}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCloseModal();
+            }}
             type="button"
           >
             X
@@ -107,8 +121,22 @@ const PostUploadModal = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col items-center justify-center gap-4"
         >
-          {/* 이미지 업로드 영역 */}
-          <div className="w-[300px] h-[300px] bg-gray-500 rounded-md"></div>
+          {/* 이미지 업로드 */}
+          <div
+            className={cn(
+              "w-[300px] h-[300px] bg-gray-200 rounded-md relative overflow-hidden",
+              form.formState.errors.imageUrl && "border-2 border-red-500",
+              form.getValues("imageUrl") && "border-2 border-gray-200"
+            )}
+          >
+            <FileUpload
+              endpoint="galleryImage"
+              onChange={(url) => form.setValue("imageUrl", url as string)}
+              value={form.getValues("imageUrl") || null}
+            />
+          </div>
+
+          {/* 제목 입력 */}
           <div className="flex flex-col w-[300px] gap-4">
             <Input placeholder="Title" {...form.register("title")} />
             {form.formState.errors.title && (
@@ -117,6 +145,7 @@ const PostUploadModal = () => {
               </p>
             )}
 
+            {/* 내용 입력 */}
             <Textarea
               {...form.register("content")}
               placeholder="Description"
@@ -129,6 +158,7 @@ const PostUploadModal = () => {
                 {form.formState.errors.content.message}
               </p>
             )}
+            {/* 날짜 선택 */}
             <div className="flex items-center gap-3">
               <DatePicker
                 date={form.watch("date")}

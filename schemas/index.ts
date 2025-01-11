@@ -29,7 +29,14 @@ export const PostUploadSchema = z.object({
     message: "content is required",
   }),
   date: z.date().optional(),
-  imageUrl: z.string().optional(),
+  imageUrl: z
+    .string({
+      required_error: "이미지를 업로드해주세요.",
+    })
+    .nullable()
+    .refine((val) => val !== null, {
+      message: "이미지를 업로드해주세요.",
+    }),
   isPrivate: z.boolean(),
   id: z.string().optional(),
 });
