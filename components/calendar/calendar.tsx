@@ -47,6 +47,7 @@ export default function CustomCalendar() {
       aria-label="날짜 선택"
       value={selectedDate}
       onChange={setSelectedDate}
+      className="w-full mt-5"
     >
       <header className="flex items-center justify-between px-4 py-2">
         <Button slot="previous">이전</Button>

@@ -27,7 +27,7 @@ const Carousel = ({ userId }: CarouselProps) => {
   });
 
   return (
-    <div className="relative group w-[350px] h-full px-3">
+    <div className="relative group w-full h-full px-3">
       <Swiper
         key={selectedDate?.toISOString()}
         modules={[Navigation, Pagination]}
@@ -35,7 +35,7 @@ const Carousel = ({ userId }: CarouselProps) => {
           swiperRef.current = swiper;
         }}
         spaceBetween={15}
-        slidesPerView={3}
+        slidesPerView={4}
         initialSlide={6}
         mousewheel={true}
         autoplay={false}

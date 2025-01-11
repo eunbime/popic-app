@@ -26,8 +26,7 @@ const RegisterForm = () => {
   const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
     try {
       startTransition(async () => {
-        const response = await register(data);
-
+        await register(data);
         router.push("/auth/login");
       });
     } catch (error) {
@@ -46,11 +45,7 @@ const RegisterForm = () => {
         type="password"
         placeholder="Password"
       />
-      <Input
-        {...form.register("name")}
-        type="password"
-        placeholder="Confirm Password"
-      />
+      <Input {...form.register("name")} type="text" placeholder="Name" />
       <Button variant="ghost" type="submit" disabled={isPending}>
         Register
       </Button>

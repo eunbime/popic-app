@@ -59,7 +59,9 @@ export default {
 
       // 로그인된 상태에서 인증 페이지 접근 시 대시보드로 리다이렉트
       if (isPublicPath && isLoggedIn) {
-        return Response.redirect(new URL("/gallery", request.url));
+        return Response.redirect(
+          new URL(`/gallery/${auth?.user?.id}`, request.url)
+        );
       }
 
       return true;

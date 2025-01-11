@@ -29,10 +29,16 @@ const NavBar = () => {
           />
         </div>
         <div className="w-[50px] h-[50px] text-black flex justify-center items-center cursor-pointer">
-          <IoPeople size={30} onClick={() => handleClick("/social/feed")} />
+          <IoPeople
+            size={30}
+            onClick={() => handleClick("/social/feed/?filter=all")}
+          />
         </div>
         <div className="w-[50px] h-[50px] text-black flex justify-center items-center cursor-pointer">
-          <IoHeart size={30} onClick={() => handleClick("/social/like")} />
+          <IoHeart
+            size={30}
+            onClick={() => handleClick("/social/like/?filter=all")}
+          />
         </div>
       </div>
     </div>

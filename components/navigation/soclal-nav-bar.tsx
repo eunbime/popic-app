@@ -1,30 +1,37 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
+
+const NAV_ITEMS = [
+  { href: "all", label: "전체" },
+  { href: "following", label: "팔로잉" },
+] as const;
 
 const SocialNavBar = () => {
   const pathname = usePathname();
-  const router = useRouter();
-
-  const handleClick = (query: string) => {
-    router.push(`${pathname}?filter=${query}`);
-  };
+  const path = pathname.includes("/social/feed")
+    ? "/social/feed"
+    : "/social/like";
+  const query = useSearchParams();
+  const filter = query.get("filter");
 
   return (
-    <div className="w-full h-[30px]  flex justify-center items-center border-b border-gray-200">
-      <div
-        onClick={() => handleClick("all")}
-        className="flex flex-1 justify-center items-center border-r cursor-pointer"
-      >
-        All
-      </div>
-      <div
-        onClick={() => handleClick("follow")}
-        className="flex flex-1 justify-center items-center cursor-pointer"
-      >
-        Follow
-      </div>
-    </div>
+    <nav className="w-full h-[30px] flex justify-center items-center gap-20 mt-3">
+      {NAV_ITEMS.map((item) => (
+        <Link
+          key={item.href}
+          href={`${path}/?filter=${item.href}`}
+          className={cn(
+            "flex justify-center items-center bg-gray-200 px-7 rounded-full py-1",
+            filter === item.href && "bg-gray-400"
+          )}
+        >
+          {item.label}
+        </Link>
+      ))}
+    </nav>
   );
 };
 

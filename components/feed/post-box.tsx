@@ -25,7 +25,7 @@ const PostBox = ({ post }: PostBoxProps) => {
     <div className="w-full h-full flex gap-10">
       <div className="flex flex-col gap-2 items-center">
         <div
-          className="w-[80px] h-[80px] rounded-full overflow-hidden bg-gray-200"
+          className="w-[80px] h-[80px] rounded-full overflow-hidden bg-gray-200 cursor-pointer"
           onClick={handleAuthorClick}
         >
           <Image
@@ -38,7 +38,10 @@ const PostBox = ({ post }: PostBoxProps) => {
             height={80}
           />
         </div>
-        <p className="text-sm font-semibold text-gray-500">
+        <p
+          className="text-sm font-semibold text-gray-500 cursor-pointer"
+          onClick={handleAuthorClick}
+        >
           {post.author.name}
         </p>
       </div>
