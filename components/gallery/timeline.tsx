@@ -7,12 +7,16 @@ import { getPostsByDate } from "@/api/posts";
 import usePosts from "@/store/posts/posts-store";
 import TimelineBox from "@/components/gallery/timeline-box";
 
-const Timeline = () => {
+interface TimelineProps {
+  userId: string;
+}
+
+const Timeline = ({ userId }: TimelineProps) => {
   const { selectedDate } = usePosts();
 
   const { data: postsByDate } = useQuery<Post[]>({
     queryKey: ["posts-by-date", selectedDate],
-    queryFn: () => getPostsByDate(selectedDate),
+    queryFn: () => getPostsByDate(selectedDate, userId),
     enabled: !!selectedDate,
   });
 

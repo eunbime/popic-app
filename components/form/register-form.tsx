@@ -8,9 +8,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterSchema } from "@/schemas";
 import { useTransition } from "react";
 import { register } from "@/actions/register";
+import { useRouter } from "next/navigation";
 
 const RegisterForm = () => {
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -22,12 +24,11 @@ const RegisterForm = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
-    console.log(data);
-
     try {
       startTransition(async () => {
         const response = await register(data);
-        console.log(response);
+
+        router.push("/auth/login");
       });
     } catch (error) {
       console.log(error);

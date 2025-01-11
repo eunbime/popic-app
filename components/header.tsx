@@ -1,15 +1,19 @@
 "use client";
 
+import useUser from "@/store/user/user-store.";
 import { usePathname, useRouter } from "next/navigation";
 import { BiArrowBack } from "react-icons/bi";
 import { IoSettings } from "react-icons/io5";
 
 const Header = () => {
+  const { user } = useUser();
   const pathname = usePathname();
   const router = useRouter();
 
   const isAuth = ["/", "/auth/login", "/auth/register"].includes(pathname);
-  const isHome = ["/gallery", "/calendar"].includes(pathname);
+  const isHome = [`/gallery/${user?.id}`, `/calendar/${user?.id}`].includes(
+    pathname
+  );
   const isFeed = pathname === "/social/feed";
   const isLike = pathname === "/social/like";
   const isSettings = pathname === "/settings";

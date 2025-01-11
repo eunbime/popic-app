@@ -2,13 +2,19 @@ import CarouselBox from "@/components/gallery/carousel-box";
 import Profile from "@/components/gallery/profile";
 import Timeline from "@/components/gallery/timeline";
 
-export default function GalleryPage() {
+export default async function GalleryPage({
+  params,
+}: {
+  params: { userId: string };
+}) {
+  const { userId } = await params;
+
   return (
     <div className="flex flex-col w-full h-full">
-      <Profile />
+      <Profile userId={userId} />
       <div className="w-full h-full">
-        <CarouselBox />
-        <Timeline />
+        <CarouselBox userId={userId} />
+        <Timeline userId={userId} />
       </div>
     </div>
   );
