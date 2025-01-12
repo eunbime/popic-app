@@ -3,10 +3,10 @@ import { NextRequest } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = params;
+    const { userId } = await params;
     // 모든 포스트를 날짜순으로 가져옴
     const posts = await db.post.findMany({
       where: {

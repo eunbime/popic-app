@@ -2,11 +2,9 @@ import CarouselBox from "@/components/gallery/carousel-box";
 import Profile from "@/components/gallery/profile";
 import Timeline from "@/components/gallery/timeline";
 
-export default async function GalleryPage({
-  params,
-}: {
-  params: { userId: string };
-}) {
+type PageParams = Promise<{ userId: string }>;
+
+export default async function GalleryPage({ params }: { params: PageParams }) {
   const { userId } = await params;
 
   return (

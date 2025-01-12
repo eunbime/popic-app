@@ -44,7 +44,7 @@ const ProfileForm = () => {
         bio: userData.bio || "",
       });
     }
-  }, [userData]);
+  }, [userData, form]);
 
   const image = form.watch("image");
 

@@ -46,7 +46,13 @@ export default {
   },
 
   callbacks: {
-    async authorized({ auth, request }: { auth: any; request: NextRequest }) {
+    async authorized({
+      auth,
+      request,
+    }: {
+      auth: { user?: { id: string; email: string; image: string } } | null;
+      request: NextRequest;
+    }) {
       const isLoggedIn = !!auth?.user;
       const isOnDashboard = request.nextUrl.pathname.startsWith("/gallery");
       const isOnAuthPage = request.nextUrl.pathname.startsWith("/auth");
