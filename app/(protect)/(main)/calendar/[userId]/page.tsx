@@ -1,9 +1,9 @@
-import Calendar from "@/components/calendar/calendar";
+import CustomCalendar from "@/components/calendar/calendar";
 
 export default function CalendarPage() {
   return (
-    <div>
-      <Calendar />
+    <div className="w-full h-full">
+      <CustomCalendar />
     </div>
   );
 }

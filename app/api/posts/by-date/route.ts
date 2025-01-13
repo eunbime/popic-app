@@ -27,6 +27,9 @@ export async function GET(request: Request) {
           lt: endDate,
         },
       },
+      include: {
+        likes: true,
+      },
       orderBy: {
         date: "desc",
       },

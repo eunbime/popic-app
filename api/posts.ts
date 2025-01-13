@@ -1,4 +1,4 @@
-import { TPostsWithAuthor } from "@/types";
+import { TPostsWithAuthorAndLikes, TPostWithLikes } from "@/types";
 import { Post } from "@prisma/client";
 import axios from "axios";
 
@@ -16,7 +16,7 @@ export const getPosts = async (): Promise<Post[]> => {
 export const getPostsByDate = async (
   date: Date | null,
   userId: string
-): Promise<Post[]> => {
+): Promise<TPostWithLikes[]> => {
   const { data } = await axios.get("/api/posts/by-date", {
     params: {
       date: date,
@@ -38,7 +38,7 @@ export const getDateGroupsByUserId = async (
   return data;
 };
 
-export const getFeedPosts = async (): Promise<TPostsWithAuthor[]> => {
+export const getFeedPosts = async (): Promise<TPostsWithAuthorAndLikes[]> => {
   const { data } = await axios.get("/api/posts/feed");
   return data;
 };

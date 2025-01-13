@@ -1,19 +1,23 @@
 import Image from "next/image";
 
-import { Post } from "@prisma/client";
-import { formatDateForTimeline } from "@/lib/formatDate";
-import { Button } from "../ui/button";
-import { PencilIcon, Trash2Icon } from "lucide-react";
-import useModal from "@/store/modal/modal-store";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { PencilIcon, Trash2Icon } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { TPostWithLikes } from "@/types";
+import useModal from "@/store/modal/modal-store";
+import { formatDateForTimeline } from "@/lib/formatDate";
+import { Button } from "@/components/ui/button";
+import HeartButton from "@/components/heart-button";
 
 interface TimelineBoxProps {
-  post: Post;
+  post: TPostWithLikes;
+  userId: string;
 }
 
-const TimelineBox = ({ post }: TimelineBoxProps) => {
+const TimelineBox = ({ post, userId }: TimelineBoxProps) => {
   const { openModal, setType, setData } = useModal();
+
   const queryClient = useQueryClient();
 
   const { mutate: deletePost, isPending: isDeletePending } = useMutation({
@@ -25,7 +29,7 @@ const TimelineBox = ({ post }: TimelineBoxProps) => {
     },
   });
 
-  const handleClick = () => {
+  const handleImageClick = () => {
     console.log("!!!");
     setType("post-view");
     openModal();
@@ -47,10 +51,10 @@ const TimelineBox = ({ post }: TimelineBoxProps) => {
   return (
     <div
       className="w-[350px] h-[430px] mx-auto mt-5 group relative cursor-pointer"
-      onClick={handleClick}
+      onClick={handleImageClick}
     >
       <p className="text-md font-bold">{formatDateForTimeline(post.date)}</p>
-      <div className="w-[350px] h-[350px] overflow-hidden ">
+      <div className="w-[350px] h-[350px] overflow-hidden">
         <Image
           src={
             post.imageUrl || "https://via.placeholder.com/350x350?text=photo"
@@ -62,7 +66,9 @@ const TimelineBox = ({ post }: TimelineBoxProps) => {
         />
       </div>
       <p className="text-md text-semibold text-gray-500">{post.title}</p>
-
+      <div className="absolute top-8 right-2">
+        <HeartButton post={post} userId={userId} />
+      </div>
       <div className="absolute flex gap-2 bottom-3 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <Button type="button" onClick={handleEdit}>
           <PencilIcon className="w-4 h-4" />

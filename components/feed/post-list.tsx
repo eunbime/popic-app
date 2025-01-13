@@ -1,9 +1,10 @@
 import PostBox from "./post-box";
 import { getFeedPosts } from "@/api/posts";
+import { TPostsWithAuthorAndLikes } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 
 const PostList = () => {
-  const { data: posts, isLoading } = useQuery({
+  const { data: posts, isLoading } = useQuery<TPostsWithAuthorAndLikes[]>({
     queryKey: ["feedPosts"],
     queryFn: getFeedPosts,
   });

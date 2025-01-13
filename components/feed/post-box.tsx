@@ -1,13 +1,17 @@
-import useModal from "@/store/modal/modal-store";
-import { TPostsWithAuthor } from "@/types";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { TPostsWithAuthorAndLikes } from "@/types";
+import useModal from "@/store/modal/modal-store";
+import useUser from "@/store/user/user-store.";
+import HeartButton from "../heart-button";
+
 interface PostBoxProps {
-  post: TPostsWithAuthor;
+  post: TPostsWithAuthorAndLikes;
 }
 
 const PostBox = ({ post }: PostBoxProps) => {
+  const { user } = useUser();
   const router = useRouter();
   const { openModal, setType, setData } = useModal();
 
@@ -48,7 +52,7 @@ const PostBox = ({ post }: PostBoxProps) => {
       <div className="flex-1 w-full h-full flex flex-col">
         <div
           onClick={handlePostClick}
-          className="w-[250px] h-[250px] rounded-md overflow-hidden bg-gray-400 cursor-pointer"
+          className="relative w-[250px] h-[250px] rounded-md overflow-hidden bg-gray-400 cursor-pointer"
         >
           <Image
             src={
@@ -59,6 +63,9 @@ const PostBox = ({ post }: PostBoxProps) => {
             height={250}
             className="object-cover"
           />
+          <div className="absolute top-2 right-2">
+            <HeartButton post={post} userId={user?.id as string} />
+          </div>
         </div>
       </div>
     </div>

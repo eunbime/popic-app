@@ -25,7 +25,9 @@ export const GET = async () => {
             image: true,
           },
         },
+        likes: true,
       },
+
       orderBy: {
         date: "desc",
       },
