@@ -4,11 +4,11 @@ import { IoHeart, IoHeartOutline } from "react-icons/io5";
 
 interface HeartButtonProps {
   post: TPostWithLikes;
-  userId: string;
+  userId?: string;
 }
 
 const HeartButton = ({ post, userId }: HeartButtonProps) => {
-  const { isLiked, toggleLike, isLoading } = useLike({
+  const { isLiked, toggleLike, isLoading, likesCount } = useLike({
     postId: post.id,
     initialLikedByUser: post.likes.some((like) => like.userId === userId),
     initialLikesCount: post.likes.length,
@@ -28,6 +28,7 @@ const HeartButton = ({ post, userId }: HeartButtonProps) => {
       ) : (
         <IoHeartOutline className="w-7 h-7 text-gray-500" />
       )}
+      <span className="text-sm text-gray-500">{likesCount}</span>
     </button>
   );
 };

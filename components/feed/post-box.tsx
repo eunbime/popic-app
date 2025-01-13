@@ -64,7 +64,7 @@ const PostBox = ({ post }: PostBoxProps) => {
             className="object-cover"
           />
           <div className="absolute top-2 right-2">
-            <HeartButton post={post} userId={user?.id as string} />
+            <HeartButton post={post} userId={user?.id} />
           </div>
         </div>
       </div>

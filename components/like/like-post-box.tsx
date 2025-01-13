@@ -1,15 +1,27 @@
 import Image from "next/image";
+import { TPostsWithAuthorAndLikes } from "@/types";
+import HeartButton from "../heart-button";
+import useUser from "@/store/user/user-store.";
 
-const LikePostBox = () => {
+interface LikePostBoxProps {
+  post: TPostsWithAuthorAndLikes;
+}
+
+const LikePostBox = ({ post }: LikePostBoxProps) => {
+  const { user } = useUser();
+
   return (
-    <div className="w-[120px] h-[120px] rounded-sm overflow-hidden bg-gray-400">
+    <div className="relative w-[120px] h-[120px] rounded-sm overflow-hidden bg-gray-400">
       <Image
-        src={"https://via.placeholder.com/120x120?text=image"}
-        alt="post"
+        src={post.imageUrl || "https://via.placeholder.com/120x120?text=image"}
+        alt="Like Post"
         width={120}
         height={120}
         className="object-cover"
       />
+      <div className="absolute top-2 right-2">
+        <HeartButton post={post} userId={user?.id} />
+      </div>
     </div>
   );
 };

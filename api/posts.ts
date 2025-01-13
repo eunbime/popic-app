@@ -42,3 +42,8 @@ export const getFeedPosts = async (): Promise<TPostsWithAuthorAndLikes[]> => {
   const { data } = await axios.get("/api/posts/feed");
   return data;
 };
+
+export const getLikePosts = async (): Promise<TPostsWithAuthorAndLikes[]> => {
+  const { data } = await axios.get("/api/posts/like");
+  return data;
+};
