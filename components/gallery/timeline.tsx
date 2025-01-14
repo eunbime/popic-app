@@ -2,11 +2,10 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { Post } from "@prisma/client";
+import { TPostWithLikes } from "@/types";
 import { getPostsByDate } from "@/api/posts";
 import usePosts from "@/store/posts/posts-store";
 import TimelineBox from "@/components/gallery/timeline-box";
-import { TPostWithLikes } from "@/types";
 
 interface TimelineProps {
   userId: string;
@@ -23,7 +22,7 @@ const Timeline = ({ userId }: TimelineProps) => {
 
   return (
     <div className="w-full h-full flex flex-col">
-      {postsByDate?.map((post: Post) => (
+      {postsByDate?.map((post: TPostWithLikes) => (
         <TimelineBox key={post.id} post={post} userId={userId} />
       ))}
     </div>

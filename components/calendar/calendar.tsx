@@ -7,39 +7,42 @@ import {
   Heading,
   Button,
 } from "react-aria-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { CalendarDate } from "@internationalized/date";
-import { formatDate } from "@/lib/formatDate";
+import { useQuery } from "@tanstack/react-query";
 
-// 이벤트 타입 정의
-interface CalendarEvent {
-  date: string; // 'YYYY-MM-DD' 형식
-  imageUrl: string;
-  title?: string;
+import { Post } from "@prisma/client";
+import { getPosts } from "@/api/posts";
+import { formatDate, formatDateForCalendar } from "@/lib/formatDate";
+
+interface CustomCalendarProps {
+  setSelectedDateForPost: (date: Date | null) => void;
 }
 
-export default function CustomCalendar() {
+export default function CustomCalendar({
+  setSelectedDateForPost,
+}: CustomCalendarProps) {
+  const { data: posts } = useQuery<Post[]>({
+    queryKey: ["postList"],
+    queryFn: () => getPosts(),
+  });
+
   const [selectedDate, setSelectedDate] = useState<CalendarDate | null>(null);
 
-  // 예시 이벤트 데이터
-  const events: CalendarEvent[] = [
-    {
-      date: "2025-01-01",
-      imageUrl: "https://via.placeholder.com/400x300?text=Hello+World",
-      title: "이벤트 1",
-    },
-    {
-      date: "2025-01-10",
-      imageUrl: "https://via.placeholder.com/400x300?text=Hello+World",
-      title: "이벤트 2",
-    },
-  ];
+  useEffect(() => {
+    const selectedDateForPost = selectedDate
+      ? new Date(selectedDate.year, selectedDate.month - 1, selectedDate.day)
+      : null;
+    setSelectedDateForPost(selectedDateForPost);
+  }, [selectedDate, setSelectedDateForPost]);
 
   // 날짜에 해당하는 이벤트 찾기
   const getEventForDate = (date: CalendarDate) => {
     const dateStr = formatDate(date);
-    return events.find((event) => event.date === dateStr);
+    return posts?.find(
+      (event) => formatDateForCalendar(event.date) === dateStr
+    );
   };
 
   return (
@@ -47,7 +50,7 @@ export default function CustomCalendar() {
       aria-label="날짜 선택"
       value={selectedDate}
       onChange={setSelectedDate}
-      className="w-full mt-5"
+      className="w-full mt-5 p-4"
     >
       <header className="flex items-center justify-between px-4 py-2">
         <Button slot="previous">이전</Button>
@@ -75,7 +78,7 @@ export default function CustomCalendar() {
                     <div className="mt-6">
                       <div className="relative w-full h-[40px]">
                         <Image
-                          src={event.imageUrl}
+                          src={event.imageUrl || ""}
                           alt={event.title || "Calendar event"}
                           className="object-cover rounded"
                           fill

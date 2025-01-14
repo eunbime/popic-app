@@ -10,3 +10,7 @@ export const formatDate = (date: CalendarDate) => {
 export const formatDateForTimeline = (date: Date) => {
   return format(date, "yyyy.MM.dd HH:mm");
 };
+
+export const formatDateForCalendar = (date: Date) => {
+  return format(date, "yyyy-MM-dd");
+};

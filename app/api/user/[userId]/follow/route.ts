@@ -5,8 +5,10 @@ import { db } from "@/lib/db";
 // 팔로우하기
 export async function POST(
   req: Request,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
+  const { userId } = await params;
+
   try {
     const session = await auth();
     if (!session?.user) {
@@ -14,13 +16,13 @@ export async function POST(
     }
 
     // 자기 자신을 팔로우하는 것 방지
-    if (session.user.id === params.userId) {
+    if (session.user.id === userId) {
       return new NextResponse("Cannot follow yourself", { status: 400 });
     }
 
     await db.user.update({
       where: {
-        id: params.userId,
+        id: userId,
       },
       data: {
         followers: {

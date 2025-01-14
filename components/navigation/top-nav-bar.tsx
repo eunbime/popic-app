@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 const TopNavBar = () => {
   const { user } = useUser();
   const pathname = usePathname();
+  const selectUserId = pathname.split("/")[2];
 
   const isGallery = pathname.includes("/gallery");
   const isCalendar = pathname.includes("/calendar");
@@ -15,6 +16,10 @@ const TopNavBar = () => {
     pathname.includes("/follower") || pathname.includes("/following");
 
   if (isFollow) {
+    return null;
+  }
+
+  if (selectUserId !== user?.id) {
     return null;
   }
 

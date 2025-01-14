@@ -5,17 +5,20 @@ import { NextResponse } from "next/server";
 // 언팔로우하기
 export async function POST(
   req: Request,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
+    const { userId } = await params;
+
     const session = await auth();
+
     if (!session?.user) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
     await db.user.update({
       where: {
-        id: params.userId,
+        id: userId,
       },
       data: {
         followers: {
