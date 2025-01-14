@@ -1,0 +1,13 @@
+{
+  "build": {
+    "env": {
+      "NEXT_TELEMETRY_DISABLED": "1"
+    },
+    "command": "npm install --legacy-peer-deps && npm run build"
+  },
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "nodejs18.x"
+    }
+  }
+}
