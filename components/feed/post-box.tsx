@@ -52,15 +52,15 @@ const PostBox = ({ post }: PostBoxProps) => {
       <div className="flex-1 w-full h-full flex flex-col">
         <div
           onClick={handlePostClick}
-          className="relative w-[250px] h-[250px] rounded-md overflow-hidden bg-gray-400 cursor-pointer"
+          className="relative w-[200px] h-[200px] rounded-md overflow-hidden bg-gray-400 cursor-pointer"
         >
           <Image
             src={
               post.imageUrl || "https://via.placeholder.com/250x250?text=image"
             }
             alt="post"
-            width={250}
-            height={250}
+            width={200}
+            height={200}
             className="object-cover"
           />
           <div className="absolute top-2 right-2">

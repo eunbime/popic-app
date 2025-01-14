@@ -1,5 +1,5 @@
 import FloatingAddButton from "@/components/floating-add-button";
-import SocialNavBar from "@/components/navigation/soclal-nav-bar";
+import SocialNavBar from "@/components/navigation/social-nav-bar";
 
 export default function SocialLayout({
   children,

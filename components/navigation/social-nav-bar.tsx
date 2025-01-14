@@ -24,7 +24,7 @@ const SocialNavBar = () => {
           key={item.href}
           href={`${path}/?filter=${item.href}`}
           className={cn(
-            "flex justify-center items-center bg-gray-200 px-7 rounded-full py-1",
+            "flex justify-center items-center bg-gray-200 text-black px-7 rounded-full py-1",
             filter === item.href && "bg-gray-400"
           )}
         >
