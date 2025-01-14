@@ -11,6 +11,12 @@ const TopNavBar = () => {
 
   const isGallery = pathname.includes("/gallery");
   const isCalendar = pathname.includes("/calendar");
+  const isFollow =
+    pathname.includes("/follower") || pathname.includes("/following");
+
+  if (isFollow) {
+    return null;
+  }
 
   return (
     <div className="w-full h-[30px] flex justify-center items-center gap-20 mt-3">

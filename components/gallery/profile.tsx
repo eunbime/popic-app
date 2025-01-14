@@ -10,6 +10,7 @@ import {
 } from "@/api/user";
 import { Button } from "../ui/button";
 import useUser from "@/store/user/user-store.";
+import Link from "next/link";
 
 interface ProfileProps {
   userId: string;
@@ -88,8 +89,12 @@ const Profile = ({ userId }: ProfileProps) => {
             )}
           </div>
           <div className="flex justify-around w-[230px]">
-            <span>팔로워</span>
-            <span>팔로잉</span>
+            <Link href={`/gallery/${userId}/follower`}>
+              <span>팔로워</span>
+            </Link>
+            <Link href={`/gallery/${userId}/following`}>
+              <span>팔로잉</span>
+            </Link>
           </div>
         </div>
       </div>

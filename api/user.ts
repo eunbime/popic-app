@@ -25,3 +25,13 @@ export const unfollowUser = async (userId: string): Promise<void> => {
   const { data } = await axios.post(`/api/user/${userId}/unfollow`);
   return data;
 };
+
+export const getFollowingList = async (userId: string): Promise<User[]> => {
+  const { data } = await axios.get(`/api/user/${userId}/following-list`);
+  return data;
+};
+
+export const getFollowerList = async (userId: string): Promise<User[]> => {
+  const { data } = await axios.get(`/api/user/${userId}/follower-list`);
+  return data;
+};
