@@ -10,3 +10,18 @@ export const getUserById = async (userId: string): Promise<User> => {
   const res = await axios.get(`/api/user/${userId}`);
   return res.data.user;
 };
+
+export const checkFollowing = async (userId: string): Promise<boolean> => {
+  const { data } = await axios.get(`/api/user/${userId}/following`);
+  return data;
+};
+
+export const followUser = async (userId: string): Promise<void> => {
+  const { data } = await axios.post(`/api/user/${userId}/follow`);
+  return data;
+};
+
+export const unfollowUser = async (userId: string): Promise<void> => {
+  const { data } = await axios.post(`/api/user/${userId}/unfollow`);
+  return data;
+};
