@@ -1,12 +1,14 @@
 import { User } from "@prisma/client";
 import Image from "next/image";
-import { Button } from "../ui/button";
+import FollowButton from "./follow-button";
+import useUser from "@/store/user/user-store.";
 
 interface FollowProfileBoxProps {
   user: User;
 }
 
 const FollowProfileBox = ({ user }: FollowProfileBoxProps) => {
+  const { user: currentUser } = useUser();
   return (
     <div className="flex items-center justify-center gap-2 w-full px-10">
       {/* 프로필 이미지 */}
@@ -23,9 +25,7 @@ const FollowProfileBox = ({ user }: FollowProfileBoxProps) => {
         <div className="flex items-center justify-between">
           <div className="text-sm font-bold">{user.name}</div>
           {/* 팔로우 버튼 */}
-          <Button variant="secondary" className="text-sm text-gray-500 h-6">
-            팔로우
-          </Button>
+          {currentUser?.id !== user.id && <FollowButton userId={user.id} />}
         </div>
         <div className="text-sm text-gray-500">{user.bio || "No bio"}</div>
       </div>

@@ -1,50 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  checkFollowing,
-  followUser,
-  getUserById,
-  unfollowUser,
-} from "@/api/user";
+import { useQuery } from "@tanstack/react-query";
+import { getUserById } from "@/api/user";
 import { Button } from "../ui/button";
 import useUser from "@/store/user/user-store.";
 import Link from "next/link";
+import FollowButton from "./follow-button";
 
 interface ProfileProps {
   userId: string;
 }
 
 const Profile = ({ userId }: ProfileProps) => {
-  const queryClient = useQueryClient();
-
   const { user } = useUser();
   const { data: userData } = useQuery({
     queryKey: ["user"],
     queryFn: () => getUserById(userId),
-  });
-
-  //팔로우 체크
-  const { data: isFollowing } = useQuery({
-    queryKey: ["following", userId],
-    queryFn: () => checkFollowing(userId),
-    enabled: !!user && user.id !== userId,
-  });
-
-  // 팔로우/언팔로우
-  const { mutate: toggleFollow } = useMutation({
-    mutationFn: async () => {
-      if (isFollowing) {
-        await unfollowUser(userId);
-      } else {
-        await followUser(userId);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["following", userId] });
-      queryClient.invalidateQueries({ queryKey: ["user"] });
-    },
   });
 
   return (
@@ -79,13 +51,7 @@ const Profile = ({ userId }: ProfileProps) => {
                 프로필 수정
               </Button>
             ) : (
-              <Button
-                variant="secondary"
-                className="h-6"
-                onClick={() => toggleFollow()}
-              >
-                {isFollowing ? "언팔로우" : "팔로우"}
-              </Button>
+              <FollowButton userId={userId} />
             )}
           </div>
           <div className="flex justify-around w-[230px]">
