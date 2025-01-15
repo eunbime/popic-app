@@ -13,6 +13,11 @@ export const getPosts = async (): Promise<Post[]> => {
   return data;
 };
 
+export const getPostsByUserId = async (userId?: string): Promise<Post[]> => {
+  const { data } = await axios.get(`/api/posts/by-user/${userId}`);
+  return data;
+};
+
 export const getPostsByDate = async (
   date: Date | null,
   userId: string

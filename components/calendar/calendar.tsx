@@ -13,8 +13,9 @@ import { CalendarDate } from "@internationalized/date";
 import { useQuery } from "@tanstack/react-query";
 
 import { Post } from "@prisma/client";
-import { getPosts } from "@/api/posts";
+import { getPostsByUserId } from "@/api/posts";
 import { formatDate, formatDateForCalendar } from "@/lib/formatDate";
+import useUser from "@/store/user/user-store.";
 
 interface CustomCalendarProps {
   setSelectedDateForPost: (date: Date | null) => void;
@@ -23,9 +24,11 @@ interface CustomCalendarProps {
 export default function CustomCalendar({
   setSelectedDateForPost,
 }: CustomCalendarProps) {
+  const { user } = useUser();
+
   const { data: posts } = useQuery<Post[]>({
-    queryKey: ["postList"],
-    queryFn: () => getPosts(),
+    queryKey: ["posts", user?.id],
+    queryFn: () => getPostsByUserId(user?.id),
   });
 
   const [selectedDate, setSelectedDate] = useState<CalendarDate | null>(null);
