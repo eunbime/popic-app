@@ -19,7 +19,14 @@ import PrivateSwitch from "@/components/gallery/private-switch";
 import FileUpload from "@/components/file-upload";
 
 const PostUploadModal = () => {
-  const { isOpen, closeModal, type, data: postData } = useModal();
+  const {
+    isOpen,
+    type,
+    data: postData,
+    setType,
+    setData,
+    openModal,
+  } = useModal();
   const user = useUser((state) => state.user);
 
   const queryClient = useQueryClient();
@@ -34,7 +41,8 @@ const PostUploadModal = () => {
       queryClient.invalidateQueries({
         queryKey: ["posts"],
       });
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts", null] });
+      queryClient.invalidateQueries({ queryKey: ["post-dates"] });
     },
   });
 
@@ -44,8 +52,9 @@ const PostUploadModal = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["posts-by-date"],
+        queryKey: ["posts"],
       });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["post-dates"] });
     },
   });
@@ -57,43 +66,48 @@ const PostUploadModal = () => {
       content: postData?.post?.content || "",
       date: postData?.post?.date || new Date(),
       imageUrl: postData?.post?.imageUrl || "",
-      isPrivate: postData?.post?.isPrivate || false,
+      isPrivate: postData?.post?.isPrivate,
     },
   });
 
   form.watch("imageUrl");
 
   useEffect(() => {
-    if (postData?.post) {
+    if (postData?.post?.id) {
       form.reset({
         title: postData.post.title,
         content: postData.post.content,
         date: new Date(postData.post.date),
         imageUrl: postData.post.imageUrl as string,
-        isPrivate: postData.post.isPrivate,
+        isPrivate: postData.post.isPrivate || false,
       });
     }
   }, [postData?.post, form]);
 
-  const handleCloseModal = () => {
-    form.reset();
-    closeModal();
-  };
-
-  const onSubmit = async (data: z.infer<typeof PostUploadSchema>) => {
+  const onSubmit = async (values: z.infer<typeof PostUploadSchema>) => {
     try {
-      if (data.id) {
+      if (postData?.post) {
         editPost({
-          ...data,
-          id: data.id,
+          ...values,
+          id: postData.post.id,
         });
       } else {
-        uploadPost(data);
+        uploadPost(values);
       }
-      handleCloseModal();
+      form.reset();
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleExit = () => {
+    setType("edit-confirm");
+    setData({
+      onConfirm: () => form.reset(),
+      title: "정말 나가시겠습니까?",
+      description: "작성한 내용이 사라집니다.",
+    });
+    openModal();
   };
 
   if (!isOpen || type !== "post-upload") return null;
@@ -108,10 +122,7 @@ const PostUploadModal = () => {
           <h1 className="text-2xl font-bold">Upload Post</h1>
           <button
             className="text-2xl font-bold"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleCloseModal();
-            }}
+            onClick={handleExit}
             type="button"
           >
             X
@@ -165,10 +176,8 @@ const PostUploadModal = () => {
                 setDate={(date) => form.setValue("date", date)}
               />
               <PrivateSwitch
-                isPrivate={form.getValues("isPrivate")}
-                setIsPrivate={(isPrivate) =>
-                  form.setValue("isPrivate", isPrivate)
-                }
+                isPrivate={form.watch("isPrivate")}
+                setIsPrivate={(value) => form.setValue("isPrivate", value)}
               />
             </div>
           </div>

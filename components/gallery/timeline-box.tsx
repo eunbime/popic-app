@@ -26,7 +26,7 @@ const TimelineBox = ({ post, userId }: TimelineBoxProps) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
-      queryClient.invalidateQueries({ queryKey: ["posts-dates"] });
+      queryClient.invalidateQueries({ queryKey: ["post-dates"] });
     },
   });
 
@@ -45,7 +45,7 @@ const TimelineBox = ({ post, userId }: TimelineBoxProps) => {
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    setType("confirm");
+    setType("delete-confirm");
     openModal();
     setData({ onConfirm: () => deletePost() });
   };

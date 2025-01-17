@@ -12,15 +12,16 @@ import useUser from "@/store/user/user-store.";
 const PostUploadModal = () => {
   const { user } = useUser();
 
-  const { isOpen, closeModal, type, data: post, setType } = useModal();
+  const { isOpen, closeModal, type, data: postData, setType } = useModal();
   const queryClient = useQueryClient();
 
   const { mutate: deletePost, isPending: isDeletePending } = useMutation({
     mutationFn: async () => {
-      await axios.delete(`/api/posts/${post?.id}`);
+      await axios.delete(`/api/posts/${postData?.post?.id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts-by-date"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["post-dates"] });
     },
   });
 
@@ -42,7 +43,9 @@ const PostUploadModal = () => {
       <div className="w-[400px] h-[800px] bg-white rounded-md">
         <div className="flex justify-between items-center p-4 border-b border-gray-200 mb-5">
           <h1 className="text-2xl font-bold">
-            {post?.date ? formatDateForTimeline(new Date(post.date)) : ""}
+            {postData?.post?.date
+              ? formatDateForTimeline(new Date(postData.post.date))
+              : ""}
           </h1>
           <button
             className="text-2xl font-bold"
@@ -56,7 +59,7 @@ const PostUploadModal = () => {
           <div className="flex flex-col items-center justify-center gap-4">
             <Image
               src={
-                post?.imageUrl ||
+                postData?.post?.imageUrl ||
                 "https://via.placeholder.com/350x350?text=photo"
               }
               alt="gallery"
@@ -64,12 +67,12 @@ const PostUploadModal = () => {
               height={350}
               className="object-cover"
             />
-            <p className="text-md font-bold">{post?.title}</p>
+            <p className="text-md font-bold">{postData?.post?.title}</p>
             <p className="text-sm px-7 text-gray-500 line-clamp-10 break-all overflow-y-auto">
-              {post?.content}
+              {postData?.post?.content}
             </p>
           </div>
-          {user?.id === post?.authorId && (
+          {user?.id === postData?.post?.authorId && (
             <div className="flex justify-end items-center gap-2">
               <Button onClick={handleEdit}>Edit</Button>
               <Button onClick={handleDelete} disabled={isDeletePending}>
