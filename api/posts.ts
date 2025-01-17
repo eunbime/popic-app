@@ -64,3 +64,14 @@ export const getFeedPosts = async (
   });
   return data;
 };
+
+export const getLikePosts = async (
+  filter: string | null
+): Promise<TPostsWithAuthorAndLikes[]> => {
+  const { data } = await axios.get("/api/posts/like", {
+    params: {
+      filter,
+    },
+  });
+  return data;
+};

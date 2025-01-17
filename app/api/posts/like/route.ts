@@ -2,8 +2,11 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const filter = searchParams.get("filter");
+
     const session = await auth();
     if (!session?.user) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -16,6 +19,15 @@ export async function GET() {
             userId: session.user.id,
           },
         },
+        ...(filter === "following" && {
+          author: {
+            followers: {
+              some: {
+                id: session.user.id,
+              },
+            },
+          },
+        }),
       },
       include: {
         likes: true,
@@ -26,6 +38,9 @@ export async function GET() {
             image: true,
           },
         },
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
