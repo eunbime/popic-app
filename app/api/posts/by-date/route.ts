@@ -32,6 +32,7 @@ export async function GET(request: Request) {
       },
       include: {
         likes: true,
+        author: true,
       },
       orderBy: {
         date: "desc",

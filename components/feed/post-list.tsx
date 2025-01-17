@@ -1,21 +1,27 @@
-import PostBox from "./post-box";
-import { getFeedPosts } from "@/api/posts";
-import { TPostsWithAuthorAndLikes } from "@/types";
-import { useQuery } from "@tanstack/react-query";
+import { useRef } from "react";
+
+import { useSearchParams } from "next/navigation";
+import { useInfinitePosts } from "@/hooks/use-infinite-posts";
+import PostBox from "@/components/feed/post-box";
 
 const PostList = () => {
-  const { data: posts, isLoading } = useQuery<TPostsWithAuthorAndLikes[]>({
-    queryKey: ["feedPosts"],
-    queryFn: getFeedPosts,
+  const searchParams = useSearchParams();
+  const selectedFilter = searchParams.get("filter");
+  const observerRef = useRef<HTMLDivElement | null>(null);
+
+  const { posts, status } = useInfinitePosts({
+    selectedFilter,
+    observerRef,
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (status === "pending") return <div>Loading...</div>;
+  if (status === "error") return <div>Error</div>;
 
   return (
     <div className="w-full h-full flex flex-col gap-10 px-7 pt-7">
-      {posts?.map((post) => (
-        <PostBox key={post.id} post={post} />
-      ))}
+      {posts?.pages.map((group) =>
+        group.map((post) => <PostBox key={post.id} post={post} />)
+      )}
     </div>
   );
 };

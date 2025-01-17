@@ -1,14 +1,19 @@
+import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { NextResponse } from "next/server";
 
-export const GET = async () => {
+export const GET = async (request: Request) => {
   try {
     const session = await auth();
+    const url = new URL(request.url);
+    const filter = url.searchParams.get("filter");
 
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const skip = parseInt(url.searchParams.get("skip") || "0");
+    const limit = parseInt(url.searchParams.get("limit") || "5");
 
     const posts = await db.post.findMany({
       where: {
@@ -16,6 +21,15 @@ export const GET = async () => {
           authorId: session.user.id,
         },
         isPrivate: false,
+        ...(filter === "following" && {
+          author: {
+            followers: {
+              some: {
+                id: session.user.id,
+              },
+            },
+          },
+        }),
       },
       include: {
         author: {
@@ -31,6 +45,8 @@ export const GET = async () => {
       orderBy: {
         date: "desc",
       },
+      skip,
+      take: limit,
     });
     console.log("Found posts:", posts); // 조회된 게시물 확인
 

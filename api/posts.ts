@@ -1,6 +1,7 @@
-import { TPostsWithAuthorAndLikes, TPostWithLikes } from "@/types";
-import { Post } from "@prisma/client";
 import axios from "axios";
+
+import { Post } from "@prisma/client";
+import { TPostsWithAuthorAndLikes } from "@/types";
 
 interface DateGroup {
   date: Date;
@@ -20,10 +21,10 @@ export const getPostsByUserId = async (userId?: string): Promise<Post[]> => {
 
 export const getPostsByDate = async (
   date: Date | null,
-  userId: string,
+  userId?: string | null,
   page: number = 1,
   limit: number = 5
-): Promise<TPostWithLikes[]> => {
+): Promise<TPostsWithAuthorAndLikes[]> => {
   const skip = (page - 1) * limit;
 
   const { data } = await axios.get("/api/posts/by-date", {
@@ -49,12 +50,17 @@ export const getDateGroupsByUserId = async (
   return data;
 };
 
-export const getFeedPosts = async (): Promise<TPostsWithAuthorAndLikes[]> => {
-  const { data } = await axios.get("/api/posts/feed");
-  return data;
-};
-
-export const getLikePosts = async (): Promise<TPostsWithAuthorAndLikes[]> => {
-  const { data } = await axios.get("/api/posts/like");
+export const getFeedPosts = async (
+  filter?: string | null,
+  skip: number = 0,
+  take: number = 5
+): Promise<TPostsWithAuthorAndLikes[]> => {
+  const { data } = await axios.get("/api/posts/feed", {
+    params: {
+      filter,
+      skip,
+      take,
+    },
+  });
   return data;
 };
