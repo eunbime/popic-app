@@ -2,31 +2,31 @@ import { z } from "zod";
 
 export const LoginSchema = z.object({
   email: z.string().email({
-    message: "Email is required",
+    message: "이메일 형식이 올바르지 않습니다.",
   }),
   password: z.string().min(1, {
-    message: "Password is required",
+    message: "비밀번호는 필수 입력 항목입니다.",
   }),
 });
 
 export const RegisterSchema = z.object({
   email: z.string().email({
-    message: "Email is required",
+    message: "이메일 형식이 올바르지 않습니다.",
   }),
   password: z.string().min(6, {
-    message: "Minimum 6 characters required",
+    message: "비밀번호는 최소 6자 이상이어야 합니다.",
   }),
   name: z.string().min(1, {
-    message: "Name is required",
+    message: "이름은 필수 입력 항목입니다.",
   }),
 });
 
 export const PostUploadSchema = z.object({
   title: z.string().min(1, {
-    message: "Title is required",
+    message: "제목은 필수 입력 항목입니다.",
   }),
   content: z.string().min(1, {
-    message: "content is required",
+    message: "내용은 필수 입력 항목입니다.",
   }),
   date: z.date().optional(),
   imageUrl: z
