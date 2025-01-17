@@ -20,12 +20,18 @@ export const getPostsByUserId = async (userId?: string): Promise<Post[]> => {
 
 export const getPostsByDate = async (
   date: Date | null,
-  userId: string
+  userId: string,
+  page: number = 1,
+  limit: number = 5
 ): Promise<TPostWithLikes[]> => {
+  const skip = (page - 1) * limit;
+
   const { data } = await axios.get("/api/posts/by-date", {
     params: {
       date: date,
       userId: userId,
+      skip,
+      limit,
     },
   });
   return data;

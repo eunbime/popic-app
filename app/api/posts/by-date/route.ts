@@ -19,6 +19,9 @@ export async function GET(request: Request) {
     const startDate = new Date(date.setHours(0, 0, 0, 0));
     const endDate = new Date(date.setHours(23, 59, 59, 999));
 
+    const skip = parseInt(searchParams.get("skip") || "0");
+    const limit = parseInt(searchParams.get("limit") || "5");
+
     const posts = await db.post.findMany({
       where: {
         authorId: userId as string,
@@ -33,6 +36,8 @@ export async function GET(request: Request) {
       orderBy: {
         date: "desc",
       },
+      skip,
+      take: limit,
     });
 
     return Response.json(posts);
