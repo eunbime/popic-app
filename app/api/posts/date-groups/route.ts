@@ -1,7 +1,14 @@
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 export async function GET() {
   try {
+    const session = await auth();
+
+    if (!session) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     // 모든 포스트를 날짜순으로 가져옴
     const posts = await db.post.findMany({
       orderBy: {

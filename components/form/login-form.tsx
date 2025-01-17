@@ -34,8 +34,7 @@ const LoginForm = () => {
         }
       });
     } catch (error) {
-      console.log(data);
-      console.log(error);
+      console.log(data, error);
     }
   };
 

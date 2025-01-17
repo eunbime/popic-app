@@ -19,7 +19,7 @@ import PrivateSwitch from "@/components/gallery/private-switch";
 import FileUpload from "@/components/file-upload";
 
 const PostUploadModal = () => {
-  const { isOpen, closeModal, type, data: post } = useModal();
+  const { isOpen, closeModal, type, data: postData } = useModal();
   const user = useUser((state) => state.user);
 
   const queryClient = useQueryClient();
@@ -32,15 +32,15 @@ const PostUploadModal = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["posts-by-date"],
+        queryKey: ["posts"],
       });
-      queryClient.invalidateQueries({ queryKey: ["post-dates"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
 
   const { mutate: editPost, isPending: isEditPending } = useMutation({
     mutationFn: (data: z.infer<typeof PostUploadSchema & { id: string }>) => {
-      return axios.put(`/api/posts/${post?.id}`, data);
+      return axios.put(`/api/posts/${data.id}`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -53,27 +53,27 @@ const PostUploadModal = () => {
   const form = useForm<z.infer<typeof PostUploadSchema>>({
     resolver: zodResolver(PostUploadSchema),
     defaultValues: {
-      title: post?.title || "",
-      content: post?.content || "",
-      date: post?.date || new Date(),
-      imageUrl: post?.imageUrl || "",
-      isPrivate: post?.isPrivate || false,
+      title: postData?.post?.title || "",
+      content: postData?.post?.content || "",
+      date: postData?.post?.date || new Date(),
+      imageUrl: postData?.post?.imageUrl || "",
+      isPrivate: postData?.post?.isPrivate || false,
     },
   });
 
   form.watch("imageUrl");
 
   useEffect(() => {
-    if (post) {
+    if (postData?.post) {
       form.reset({
-        title: post.title,
-        content: post.content,
-        date: new Date(post.date),
-        imageUrl: post.imageUrl as string,
-        isPrivate: post.isPrivate,
+        title: postData.post.title,
+        content: postData.post.content,
+        date: new Date(postData.post.date),
+        imageUrl: postData.post.imageUrl as string,
+        isPrivate: postData.post.isPrivate,
       });
     }
-  }, [post, form]);
+  }, [postData?.post, form]);
 
   const handleCloseModal = () => {
     form.reset();
@@ -82,10 +82,10 @@ const PostUploadModal = () => {
 
   const onSubmit = async (data: z.infer<typeof PostUploadSchema>) => {
     try {
-      if (post?.id) {
+      if (data.id) {
         editPost({
           ...data,
-          id: post?.id,
+          id: data.id,
         });
       } else {
         uploadPost(data);
@@ -173,7 +173,7 @@ const PostUploadModal = () => {
             </div>
           </div>
           <Button type="submit" disabled={isPending || isEditPending}>
-            {post ? "Edit" : "Upload"}
+            {postData?.post ? "Edit" : "Upload"}
           </Button>
         </form>
       </div>

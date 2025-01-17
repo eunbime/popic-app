@@ -25,27 +25,29 @@ const TimelineBox = ({ post, userId }: TimelineBoxProps) => {
       await axios.delete(`/api/posts/${post.id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts-by-date"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts-dates"] });
     },
   });
 
   const handleImageClick = () => {
-    console.log("!!!");
     setType("post-view");
     openModal();
-    setData(post);
+    setData({ post });
   };
 
   const handleEdit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setType("post-upload");
     openModal();
-    setData(post);
+    setData({ post });
   };
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    deletePost();
+    setType("confirm");
+    openModal();
+    setData({ onConfirm: () => deletePost() });
   };
 
   return (

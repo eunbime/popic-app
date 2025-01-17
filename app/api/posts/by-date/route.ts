@@ -1,23 +1,36 @@
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 export async function GET(request: Request) {
   try {
+    const session = await auth();
+
+    if (!session) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const dateStr = searchParams.get("date");
-    const userId = searchParams.get("userId");
-
-    if (!userId) {
-      return Response.json([]);
-    }
 
     if (!dateStr) {
-      return Response.json([]);
+      return Response.json(
+        { error: "Missing required dateStr" },
+        { status: 400 }
+      );
     }
 
+    const userId = searchParams.get("userId");
     // KST 기준 시작/종료 시간 설정
     const date = new Date(dateStr);
     const startDate = new Date(date.setHours(0, 0, 0, 0));
     const endDate = new Date(date.setHours(23, 59, 59, 999));
+
+    if (!date || !userId) {
+      return Response.json(
+        { error: "Missing required parameters" },
+        { status: 400 }
+      );
+    }
 
     const skip = parseInt(searchParams.get("skip") || "0");
     const limit = parseInt(searchParams.get("limit") || "5");
@@ -34,11 +47,11 @@ export async function GET(request: Request) {
         likes: true,
         author: true,
       },
+      skip,
+      take: limit,
       orderBy: {
         date: "desc",
       },
-      skip,
-      take: limit,
     });
 
     return Response.json(posts);
