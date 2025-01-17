@@ -9,9 +9,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from "@/schemas";
 import { useTransition } from "react";
 import { login } from "@/actions/login";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -22,12 +24,14 @@ const LoginForm = () => {
   });
 
   const handleSubmit = async (data: z.infer<typeof LoginSchema>) => {
-    console.log(data);
-
     try {
       startTransition(async () => {
         const response = await login(data);
-        console.log(response);
+        if (response.success) {
+          router.push("/");
+        } else {
+          form.setError("email", { message: response.error });
+        }
       });
     } catch (error) {
       console.log(data);
@@ -46,6 +50,9 @@ const LoginForm = () => {
         placeholder="Password"
         {...form.register("password")}
       />
+      {form.formState.errors.email && (
+        <p className="text-red-500">{form.formState.errors.email.message}</p>
+      )}
       <Button variant="ghost" type="submit" disabled={isPending}>
         Login
       </Button>

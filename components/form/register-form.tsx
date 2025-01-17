@@ -1,14 +1,15 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
+import { useTransition, useState } from "react";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
 import { RegisterSchema } from "@/schemas";
-import { useTransition, useState } from "react";
 import { register } from "@/actions/register";
-import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const RegisterForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -27,27 +28,63 @@ const RegisterForm = () => {
 
   const { errors } = form.formState;
 
-  const onSubmit = (data: z.infer<typeof RegisterSchema>) => {
-    console.log("Form submitted", data, step);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const values = form.getValues();
+
+    if (step === 1) {
+      const emailSchema = z.object({
+        email: RegisterSchema.shape.email,
+      });
+
+      const result = emailSchema.safeParse({ email: values.email });
+      if (!result.success) {
+        form.setError("email", { message: "이메일 형식이 올바르지 않습니다." });
+        return;
+      }
+      setStep(2);
+      return;
+    }
+
+    if (step === 2) {
+      const passwordSchema = z.object({
+        password: RegisterSchema.shape.password,
+      });
+
+      const result = passwordSchema.safeParse({ password: values.password });
+      if (!result.success) {
+        form.setError("password", {
+          message: "비밀번호는 6자 이상이어야 합니다.",
+        });
+        return;
+      }
+      setStep(3);
+      return;
+    }
 
     if (step === 3) {
+      const result = RegisterSchema.safeParse(values);
+      if (!result.success) {
+        form.setError("name", {
+          message: "이름은 필수 입력 항목입니다.",
+        });
+        return;
+      }
+
       startTransition(async () => {
         try {
-          await register(data);
+          await register(values);
           router.push("/auth/login");
         } catch (error) {
           console.log(error);
         }
       });
-      return;
     }
-
-    setStep(step + 1);
   };
-
   return (
     <form
-      onSubmit={form.handleSubmit(onSubmit)}
+      onSubmit={handleSubmit}
       className="flex flex-col items-center justify-center text-black dark:text-white gap-4"
     >
       {step === 1 && (

@@ -12,7 +12,7 @@ export default function Settings() {
       <Link className="w-full p-4" href="/settings/profile">
         Profile
       </Link>
-      <span className="w-full p-4" onClick={handleLogout}>
+      <span className="w-full p-4 cursor-pointer" onClick={handleLogout}>
         Logout
       </span>
     </div>
