@@ -1,11 +1,22 @@
 import type { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import type { NextRequest } from "next/server";
+import GoogleProvider from "next-auth/providers/google";
 import { compare } from "bcryptjs";
 import { db } from "./db";
 
 export default {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
+    }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -46,43 +57,52 @@ export default {
   },
 
   callbacks: {
-    async authorized({
-      auth,
-      request,
-    }: {
-      auth: { user?: { id: string; email: string; image: string } } | null;
-      request: NextRequest;
-    }) {
-      const isLoggedIn = !!auth?.user;
-      const isOnDashboard = request.nextUrl.pathname.startsWith("/gallery");
-      const isOnAuthPage = request.nextUrl.pathname.startsWith("/auth");
-      const isPublicPath = request.nextUrl.pathname === "/" || isOnAuthPage;
-
-      // 대시보드 접근 시 로그인 필요
-      if (isOnDashboard && !isLoggedIn) {
+    async signIn({ user, account }) {
+      if (!user?.email) {
+        console.error("No email provided");
         return false;
       }
 
-      // 로그인된 상태에서 인증 페이지 접근 시 대시보드로 리다이렉트
-      if (isPublicPath && isLoggedIn) {
-        return Response.redirect(
-          new URL(`/gallery/${auth?.user?.id}`, request.url)
-        );
+      if (account?.provider === "google") {
+        try {
+          const existingUser = await db.user.findUnique({
+            where: { email: user.email! },
+          });
+          if (!existingUser) {
+            const newUser = await db.user.create({
+              data: {
+                email: user.email!,
+                name: user.name!,
+                image: user.image,
+              },
+            });
+            return !!newUser;
+          }
+          return true;
+        } catch (error) {
+          console.error("Error creating user", error);
+          return false;
+        }
       }
-
       return true;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
+        if (account?.provider === "google") {
+          const dbUser = await db.user.findUnique({
+            where: { email: token.email! },
+          });
+          if (dbUser) {
+            token.id = dbUser.id;
+          }
+        }
         token.id = user.id;
-        token.email = user.email;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id;
-        session.user.email = token.email;
       }
       return session;
     },
