@@ -33,8 +33,7 @@ export const PostUploadSchema = z.object({
     .string({
       required_error: "이미지를 업로드해주세요.",
     })
-    .nullable()
-    .refine((val) => val !== null, {
+    .min(1, {
       message: "이미지를 업로드해주세요.",
     }),
   isPrivate: z.boolean(),

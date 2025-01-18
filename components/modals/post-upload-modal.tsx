@@ -27,7 +27,6 @@ const PostUploadModal = () => {
     setData,
     openModal,
     closeModal,
-    previousType,
   } = useModal();
   const user = useUser((state) => state.user);
 
@@ -47,22 +46,30 @@ const PostUploadModal = () => {
   // 포스트 데이터 초기화
   useEffect(() => {
     if (isOpen && type === "post-upload") {
-      if (postData?.post) {
-        // 편집 모드
-        form.reset({
-          title: postData.post.title,
-          content: postData.post.content,
-          date: new Date(postData.post.date),
-          imageUrl: postData.post.imageUrl || "",
-          isPrivate: postData.post.isPrivate || false,
-        });
-      } else if (postData?.formData && previousType === "edit-confirm") {
-        form.reset(postData.formData);
+      // 편집 모드
+      if (postData?.post || postData?.formData) {
+        if (postData.post) {
+          form.reset({
+            id: postData.post?.id,
+            title: postData.post?.title,
+            content: postData.post.content,
+            date: new Date(postData.post.date),
+            imageUrl: postData.post.imageUrl || "",
+            isPrivate: postData.post.isPrivate,
+          });
+        }
       } else {
-        form.reset();
+        // 업로드 모드
+        form.reset({
+          title: "",
+          content: "",
+          date: new Date(),
+          imageUrl: "",
+          isPrivate: false,
+        });
       }
     }
-  }, [isOpen, postData?.post, postData?.formData, form, type, previousType]);
+  }, [isOpen, postData?.post, postData?.formData, form, type]);
 
   const queryClient = useQueryClient();
   // 포스트 업로드
@@ -132,8 +139,6 @@ const PostUploadModal = () => {
     });
     openModal();
   };
-
-  console.log({ data: postData?.formData });
 
   if (!isOpen || type !== "post-upload") return null;
 

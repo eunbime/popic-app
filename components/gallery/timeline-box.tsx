@@ -47,7 +47,11 @@ const TimelineBox = ({ post, userId }: TimelineBoxProps) => {
     e.stopPropagation();
     setType("delete-confirm");
     openModal();
-    setData({ onConfirm: () => deletePost() });
+    setData({
+      onConfirm: () => deletePost(),
+      title: "정말 삭제하시겠습니까?",
+      description: "삭제된 포스트는 복구할 수 없습니다.",
+    });
   };
 
   return (
