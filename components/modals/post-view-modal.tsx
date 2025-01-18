@@ -1,29 +1,30 @@
 "use client";
 
-import useModal from "@/store/modal/modal-store";
-import { formatDateForTimeline } from "@/lib/formatDate";
 import Image from "next/image";
-import { Button } from "../ui/button";
-import { useScrollLock } from "@/hooks/use-scroll-lock";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+
+import { TPostWithLikes } from "@/types";
+import { formatDateForTimeline } from "@/lib/formatDate";
 import useUser from "@/store/user/user-store.";
+import useModal from "@/store/modal/modal-store";
+import { useScrollLock } from "@/hooks/use-scroll-lock";
+import { useCustomMutation } from "@/hooks/useMutation";
+import { Button } from "@/components/ui/button";
 
 const PostUploadModal = () => {
   const { user } = useUser();
 
-  const { isOpen, closeModal, type, data: postData, setType } = useModal();
-  const queryClient = useQueryClient();
+  const {
+    isOpen,
+    closeModal,
+    type,
+    data: postData,
+    setType,
+    openModal,
+    setData,
+  } = useModal();
 
-  const { mutate: deletePost, isPending: isDeletePending } = useMutation({
-    mutationFn: async () => {
-      await axios.delete(`/api/posts/${postData?.post?.id}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      queryClient.invalidateQueries({ queryKey: ["post-dates"] });
-    },
-  });
+  const { deleteMutation } = useCustomMutation();
+  const { mutate: deletePost, isPending: isDeletePending } = deleteMutation;
 
   useScrollLock(isOpen);
 
@@ -34,8 +35,13 @@ const PostUploadModal = () => {
   };
 
   const handleDelete = () => {
-    deletePost();
-    closeModal();
+    setType("delete-confirm");
+    openModal();
+    setData({
+      onConfirm: () => deletePost(postData?.post as TPostWithLikes),
+      title: "정말 삭제하시겠습니까?",
+      description: "삭제된 포스트는 복구할 수 없습니다.",
+    });
   };
 
   return (

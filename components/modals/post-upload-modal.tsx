@@ -1,16 +1,15 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { z } from "zod";
 
 import { cn } from "@/lib/utils";
+import { PostUploadSchema } from "@/schemas";
 import useModal from "@/store/modal/modal-store";
 import useUser from "@/store/user/user-store.";
-import { PostUploadSchema } from "@/schemas";
+import { useCustomMutation } from "@/hooks/useMutation";
 import DatePicker from "@/components/gallery/date-picker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,58 +70,20 @@ const PostUploadModal = () => {
     }
   }, [isOpen, postData?.post, postData?.formData, form, type]);
 
-  const queryClient = useQueryClient();
-  // 포스트 업로드
-  const { mutate: uploadPost, isPending } = useMutation({
-    mutationFn: (values: z.infer<typeof PostUploadSchema>) => {
-      return axios.post("/api/posts", {
-        ...values,
-        authorId: user?.id,
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["posts"],
-      });
-      queryClient.invalidateQueries({ queryKey: ["posts", null] });
-      queryClient.invalidateQueries({ queryKey: ["post-dates"] });
-      form.reset();
-      closeModal();
-    },
-    onError: (error) => {
-      console.log("[POST_UPLOAD_ERROR]", error);
-    },
-  });
-
-  // 포스트 수정
-  const { mutate: editPost, isPending: isEditPending } = useMutation({
-    mutationFn: (values: z.infer<typeof PostUploadSchema>) => {
-      if (!postData?.post?.id) throw new Error("Post ID is required");
-
-      return axios.put(`/api/posts/${postData?.post?.id}`, values);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["posts"],
-      });
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      queryClient.invalidateQueries({ queryKey: ["post-dates"] });
-      form.reset();
-      closeModal();
-    },
-    onError: (error) => {
-      console.log("[POST_EDIT_ERROR]", error);
-    },
-  });
+  const { uploadMutation, editMutation } = useCustomMutation();
+  const { mutate: uploadPost, isPending: isUploadPending } = uploadMutation;
+  const { mutate: editPost, isPending: isEditPending } = editMutation;
 
   // 포스트 업로드 및 수정
   const onSubmit = async (values: z.infer<typeof PostUploadSchema>) => {
     try {
       if (postData?.post || postData?.formData) {
-        editPost(values);
+        editPost({ values, postId: postData?.post?.id as string });
       } else {
-        uploadPost(values);
+        uploadPost({ values, userId: user?.id as string });
       }
+      form.reset();
+      closeModal();
     } catch (error) {
       console.log("[POST_SUBMIT_ERROR]", error);
     }
@@ -211,7 +172,7 @@ const PostUploadModal = () => {
               />
             </div>
           </div>
-          <Button type="submit" disabled={isPending || isEditPending}>
+          <Button type="submit" disabled={isUploadPending || isEditPending}>
             {postData?.post || postData?.formData ? "Edit" : "Upload"}
           </Button>
         </form>

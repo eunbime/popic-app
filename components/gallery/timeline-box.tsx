@@ -1,12 +1,11 @@
 import Image from "next/image";
 
-import axios from "axios";
 import { PencilIcon, Trash2Icon } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { TPostWithLikes } from "@/types";
 import useModal from "@/store/modal/modal-store";
 import { formatDateForTimeline } from "@/lib/formatDate";
+import { useCustomMutation } from "@/hooks/useMutation";
 import { Button } from "@/components/ui/button";
 import HeartButton from "@/components/heart-button";
 
@@ -18,17 +17,8 @@ interface TimelineBoxProps {
 const TimelineBox = ({ post, userId }: TimelineBoxProps) => {
   const { openModal, setType, setData } = useModal();
 
-  const queryClient = useQueryClient();
-
-  const { mutate: deletePost, isPending: isDeletePending } = useMutation({
-    mutationFn: async () => {
-      await axios.delete(`/api/posts/${post.id}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      queryClient.invalidateQueries({ queryKey: ["post-dates"] });
-    },
-  });
+  const { deleteMutation } = useCustomMutation();
+  const { mutate: deletePost, isPending: isDeletePending } = deleteMutation;
 
   const handleImageClick = () => {
     setType("post-view");
@@ -48,7 +38,7 @@ const TimelineBox = ({ post, userId }: TimelineBoxProps) => {
     setType("delete-confirm");
     openModal();
     setData({
-      onConfirm: () => deletePost(),
+      onConfirm: () => deletePost(post),
       title: "정말 삭제하시겠습니까?",
       description: "삭제된 포스트는 복구할 수 없습니다.",
     });
