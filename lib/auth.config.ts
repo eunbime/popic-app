@@ -1,10 +1,22 @@
 import type { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { compare } from "bcryptjs";
 import { db } from "./db";
 
 export default {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
+    }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -45,17 +57,52 @@ export default {
   },
 
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account }) {
+      if (!user?.email) {
+        console.error("No email provided");
+        return false;
+      }
+
+      if (account?.provider === "google") {
+        try {
+          const existingUser = await db.user.findUnique({
+            where: { email: user.email! },
+          });
+          if (!existingUser) {
+            const newUser = await db.user.create({
+              data: {
+                email: user.email!,
+                name: user.name!,
+                image: user.image,
+              },
+            });
+            return !!newUser;
+          }
+          return true;
+        } catch (error) {
+          console.error("Error creating user", error);
+          return false;
+        }
+      }
+      return true;
+    },
+    async jwt({ token, user, account }) {
       if (user) {
+        if (account?.provider === "google") {
+          const dbUser = await db.user.findUnique({
+            where: { email: token.email! },
+          });
+          if (dbUser) {
+            token.id = dbUser.id;
+          }
+        }
         token.id = user.id;
-        token.email = user.email;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id;
-        session.user.email = token.email;
       }
       return session;
     },
