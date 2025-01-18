@@ -1,4 +1,6 @@
+import { PostUploadSchema } from "@/schemas";
 import { Post } from "@prisma/client";
+import { z } from "zod";
 import { create } from "zustand";
 
 export type ModalType =
@@ -11,9 +13,10 @@ export type ModalType =
 
 export type ModalData = null | {
   post?: Post | null;
-  onConfirm?: () => void;
+  onConfirm?: null | (() => void);
   title?: string;
   description?: string;
+  formData?: z.infer<typeof PostUploadSchema> | null;
 };
 
 interface ModalState {
@@ -25,6 +28,7 @@ interface ModalState {
   closeModal: () => void;
   closeConfirmModal: () => void;
   data: ModalData;
+  previousData: ModalData | null;
   setData: (data: ModalData) => void;
 }
 
@@ -35,41 +39,32 @@ const useModal = create<ModalState>((set) => ({
     set((state) => ({
       type,
       previousType: type === "edit-confirm" ? state.type : null,
+      previousData: type === "edit-confirm" ? state.data : null,
     })),
   isOpen: false,
   openModal: () => set({ isOpen: true }),
   closeModal: () =>
-    set({ type: null, previousType: null, isOpen: false, data: null }),
-  closeConfirmModal: () =>
-    set((state) => {
-      // delete-confirm 모달이 단독으로 열렸을 때는 모든 상태 초기화
-      if (state.type === "delete-confirm") {
-        return {
-          type: null,
-          previousType: null,
-          data: null,
-          isOpen: false,
-        };
-      }
-      // 다른 모달 위에서 열렸을 때는 이전 모달로 돌아가기
-      if (state.type === "edit-confirm") {
-        return {
-          type: state.previousType,
-          previousType: null,
-          data: null,
-          isOpen: true,
-        };
-      }
-      // 기본적으로는 모든 모달 닫기
-      return {
-        type: null,
-        previousType: null,
-        data: null,
-        isOpen: false,
-      };
+    set({
+      type: null,
+      previousType: null,
+      isOpen: false,
+      data: null,
+      previousData: null,
     }),
+  closeConfirmModal: () =>
+    set((state) => ({
+      type: state.previousType,
+      data: {
+        ...state.previousData,
+        formData: state.data?.formData, // 현재 formData 유지
+      },
+      previousType: null,
+      previousData: null,
+      isOpen: !!state.previousType,
+    })),
   data: null,
-  setData: (data) => set({ data }),
+  previousData: null,
+  setData: (data) => set({ data, previousData: null }),
 }));
 
 export default useModal;

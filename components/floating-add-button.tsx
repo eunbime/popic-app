@@ -4,10 +4,19 @@ import useModal from "@/store/modal/modal-store";
 import { Plus } from "lucide-react";
 
 const FloatingAddButton = () => {
-  const { openModal, setType } = useModal();
+  const { openModal, setType, setData, data } = useModal();
+
+  console.log({ data });
 
   const handleOpenModal = () => {
     setType("post-upload");
+    setData({
+      post: null,
+      formData: null,
+      title: "",
+      description: "",
+      onConfirm: null,
+    });
     openModal();
   };
 

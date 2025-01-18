@@ -26,14 +26,50 @@ const PostUploadModal = () => {
     setType,
     setData,
     openModal,
+    closeModal,
+    previousType,
   } = useModal();
   const user = useUser((state) => state.user);
 
+  const form = useForm<z.infer<typeof PostUploadSchema>>({
+    resolver: zodResolver(PostUploadSchema),
+    defaultValues: {
+      title: "",
+      content: "",
+      date: new Date(),
+      imageUrl: "",
+      isPrivate: false,
+    },
+  });
+
+  form.watch("imageUrl");
+
+  // 포스트 데이터 초기화
+  useEffect(() => {
+    if (isOpen && type === "post-upload") {
+      if (postData?.post) {
+        // 편집 모드
+        form.reset({
+          title: postData.post.title,
+          content: postData.post.content,
+          date: new Date(postData.post.date),
+          imageUrl: postData.post.imageUrl || "",
+          isPrivate: postData.post.isPrivate || false,
+        });
+      } else if (postData?.formData && previousType === "edit-confirm") {
+        form.reset(postData.formData);
+      } else {
+        form.reset();
+      }
+    }
+  }, [isOpen, postData?.post, postData?.formData, form, type, previousType]);
+
   const queryClient = useQueryClient();
+  // 포스트 업로드
   const { mutate: uploadPost, isPending } = useMutation({
-    mutationFn: (data: z.infer<typeof PostUploadSchema>) => {
+    mutationFn: (values: z.infer<typeof PostUploadSchema>) => {
       return axios.post("/api/posts", {
-        ...data,
+        ...values,
         authorId: user?.id,
       });
     },
@@ -43,12 +79,20 @@ const PostUploadModal = () => {
       });
       queryClient.invalidateQueries({ queryKey: ["posts", null] });
       queryClient.invalidateQueries({ queryKey: ["post-dates"] });
+      form.reset();
+      closeModal();
+    },
+    onError: (error) => {
+      console.log("[POST_UPLOAD_ERROR]", error);
     },
   });
 
+  // 포스트 수정
   const { mutate: editPost, isPending: isEditPending } = useMutation({
-    mutationFn: (data: z.infer<typeof PostUploadSchema & { id: string }>) => {
-      return axios.put(`/api/posts/${data.id}`, data);
+    mutationFn: (values: z.infer<typeof PostUploadSchema>) => {
+      if (!postData?.post?.id) throw new Error("Post ID is required");
+
+      return axios.put(`/api/posts/${postData?.post?.id}`, values);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -56,59 +100,40 @@ const PostUploadModal = () => {
       });
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["post-dates"] });
+      form.reset();
+      closeModal();
+    },
+    onError: (error) => {
+      console.log("[POST_EDIT_ERROR]", error);
     },
   });
 
-  const form = useForm<z.infer<typeof PostUploadSchema>>({
-    resolver: zodResolver(PostUploadSchema),
-    defaultValues: {
-      title: postData?.post?.title || "",
-      content: postData?.post?.content || "",
-      date: postData?.post?.date || new Date(),
-      imageUrl: postData?.post?.imageUrl || "",
-      isPrivate: postData?.post?.isPrivate,
-    },
-  });
-
-  form.watch("imageUrl");
-
-  useEffect(() => {
-    if (postData?.post?.id) {
-      form.reset({
-        title: postData.post.title,
-        content: postData.post.content,
-        date: new Date(postData.post.date),
-        imageUrl: postData.post.imageUrl as string,
-        isPrivate: postData.post.isPrivate || false,
-      });
-    }
-  }, [postData?.post, form]);
-
+  // 포스트 업로드 및 수정
   const onSubmit = async (values: z.infer<typeof PostUploadSchema>) => {
     try {
-      if (postData?.post) {
-        editPost({
-          ...values,
-          id: postData.post.id,
-        });
+      if (postData?.post || postData?.formData) {
+        editPost(values);
       } else {
         uploadPost(values);
       }
-      form.reset();
     } catch (error) {
-      console.log(error);
+      console.log("[POST_SUBMIT_ERROR]", error);
     }
   };
 
   const handleExit = () => {
+    const currentValues = form.getValues();
     setType("edit-confirm");
     setData({
       onConfirm: () => form.reset(),
       title: "정말 나가시겠습니까?",
       description: "작성한 내용이 사라집니다.",
+      formData: currentValues,
     });
     openModal();
   };
+
+  console.log({ data: postData?.formData });
 
   if (!isOpen || type !== "post-upload") return null;
 
@@ -182,7 +207,7 @@ const PostUploadModal = () => {
             </div>
           </div>
           <Button type="submit" disabled={isPending || isEditPending}>
-            {postData?.post ? "Edit" : "Upload"}
+            {postData?.post || postData?.formData ? "Edit" : "Upload"}
           </Button>
         </form>
       </div>
