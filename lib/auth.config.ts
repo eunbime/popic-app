@@ -1,6 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import type { NextRequest } from "next/server";
 import { compare } from "bcryptjs";
 import { db } from "./db";
 
@@ -46,32 +45,6 @@ export default {
   },
 
   callbacks: {
-    async authorized({
-      auth,
-      request,
-    }: {
-      auth: { user?: { id: string; email: string; image: string } } | null;
-      request: NextRequest;
-    }) {
-      const isLoggedIn = !!auth?.user;
-      const isOnDashboard = request.nextUrl.pathname.startsWith("/gallery");
-      const isOnAuthPage = request.nextUrl.pathname.startsWith("/auth");
-      const isPublicPath = request.nextUrl.pathname === "/" || isOnAuthPage;
-
-      // 대시보드 접근 시 로그인 필요
-      if (isOnDashboard && !isLoggedIn) {
-        return false;
-      }
-
-      // 로그인된 상태에서 인증 페이지 접근 시 대시보드로 리다이렉트
-      if (isPublicPath && isLoggedIn) {
-        return Response.redirect(
-          new URL(`/gallery/${auth?.user?.id}`, request.url)
-        );
-      }
-
-      return true;
-    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
