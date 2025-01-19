@@ -1,4 +1,3 @@
-import FloatingAddButton from "@/components/floating-add-button";
 import TopNavBar from "@/components/navigation/top-nav-bar";
 
 export default function HomeLayout({
@@ -12,7 +11,6 @@ export default function HomeLayout({
       <div className="w-full h-full bg-white dark:bg-gray-900 pb-[100px]">
         {children}
       </div>
-      <FloatingAddButton />
     </div>
   );
 }

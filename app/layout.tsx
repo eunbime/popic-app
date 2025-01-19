@@ -8,6 +8,7 @@ import { auth } from "@/lib/auth";
 import ModalProvider from "@/components/providers/modal-provider";
 import { UserInitializer } from "@/components/providers/user-initializer";
 import QueryProvider from "@/components/providers/query-provider";
+import FloatingAddButton from "@/components/floating-add-button";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,6 +46,7 @@ export default async function RootLayout({
               {children}
             </div>
             <NavBar />
+            <FloatingAddButton />
           </QueryProvider>
         </ThemeProvider>
       </body>

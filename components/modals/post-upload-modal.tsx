@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -8,7 +8,6 @@ import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { PostUploadSchema } from "@/schemas";
 import useModal from "@/store/modal/modal-store";
-import useUser from "@/store/user/user-store.";
 import { useCustomMutation } from "@/hooks/useMutation";
 import DatePicker from "@/components/gallery/date-picker";
 import { Button } from "@/components/ui/button";
@@ -16,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import PrivateSwitch from "@/components/gallery/private-switch";
 import FileUpload from "@/components/file-upload";
+import { useQueryClient } from "@tanstack/react-query";
 
 const PostUploadModal = () => {
   const {
@@ -27,7 +27,15 @@ const PostUploadModal = () => {
     openModal,
     closeModal,
   } = useModal();
-  const user = useUser((state) => state.user);
+
+  const queryClient = useQueryClient();
+
+  const { uploadMutation, editMutation } = useCustomMutation();
+  const { mutateAsync: uploadPost, isPending: isUploadPending } =
+    uploadMutation;
+  const { mutateAsync: editPost, isPending: isEditPending } = editMutation;
+
+  const [isSettling, setIsSettling] = useState(false);
 
   const form = useForm<z.infer<typeof PostUploadSchema>>({
     resolver: zodResolver(PostUploadSchema),
@@ -39,8 +47,6 @@ const PostUploadModal = () => {
       isPrivate: false,
     },
   });
-
-  form.watch("imageUrl");
 
   // 포스트 데이터 초기화
   useEffect(() => {
@@ -70,21 +76,34 @@ const PostUploadModal = () => {
     }
   }, [isOpen, postData?.post, postData?.formData, form, type]);
 
-  const { uploadMutation, editMutation } = useCustomMutation();
-  const { mutate: uploadPost, isPending: isUploadPending } = uploadMutation;
-  const { mutate: editPost, isPending: isEditPending } = editMutation;
-
   // 포스트 업로드 및 수정
   const onSubmit = async (values: z.infer<typeof PostUploadSchema>) => {
     try {
+      setIsSettling(true);
       if (postData?.post || postData?.formData) {
-        editPost({ values, postId: postData?.post?.id as string });
+        await editPost(
+          { values, postId: postData?.post?.id as string },
+          {
+            onSettled: async () => {
+              await queryClient.invalidateQueries().then(() => {
+                setIsSettling(false);
+                closeModal();
+              });
+            },
+          }
+        );
       } else {
-        uploadPost({ values, userId: user?.id as string });
+        await uploadPost(values, {
+          onSettled: async () => {
+            await queryClient.invalidateQueries().then(() => {
+              setIsSettling(false);
+              closeModal();
+            });
+          },
+        });
       }
-      form.reset();
-      closeModal();
     } catch (error) {
+      setIsSettling(false);
       console.log("[POST_SUBMIT_ERROR]", error);
     }
   };
@@ -134,7 +153,7 @@ const PostUploadModal = () => {
             <FileUpload
               endpoint="galleryImage"
               onChange={(url) => form.setValue("imageUrl", url as string)}
-              value={form.getValues("imageUrl") || null}
+              value={form.watch("imageUrl") || null}
             />
           </div>
 
@@ -168,12 +187,21 @@ const PostUploadModal = () => {
               />
               <PrivateSwitch
                 isPrivate={form.watch("isPrivate")}
-                setIsPrivate={(value) => form.setValue("isPrivate", value)}
+                setIsPrivate={(isPrivate) =>
+                  form.setValue("isPrivate", isPrivate)
+                }
               />
             </div>
           </div>
-          <Button type="submit" disabled={isUploadPending || isEditPending}>
-            {postData?.post || postData?.formData ? "Edit" : "Upload"}
+          <Button
+            type="submit"
+            disabled={isUploadPending || isEditPending || isSettling}
+          >
+            {isUploadPending || isEditPending || isSettling
+              ? "Loading..."
+              : postData?.post || postData?.formData
+              ? "Edit"
+              : "Upload"}{" "}
           </Button>
         </form>
       </div>

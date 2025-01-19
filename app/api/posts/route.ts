@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
       title: data.title,
       content: data.content,
       date: data.date,
+      isPrivate: data.isPrivate,
       imageUrl: data.imageUrl,
       authorId: data.authorId,
     },

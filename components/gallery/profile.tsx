@@ -7,6 +7,7 @@ import { Button } from "../ui/button";
 import useUser from "@/store/user/user-store.";
 import Link from "next/link";
 import FollowButton from "./follow-button";
+import { useRouter } from "next/navigation";
 
 interface ProfileProps {
   userId: string;
@@ -14,6 +15,8 @@ interface ProfileProps {
 
 const Profile = ({ userId }: ProfileProps) => {
   const { user } = useUser();
+  const router = useRouter();
+
   const { data: userData } = useQuery({
     queryKey: ["user"],
     queryFn: () => getUserById(userId),
@@ -47,7 +50,11 @@ const Profile = ({ userId }: ProfileProps) => {
         <div className="flex items-center gap-5">
           <div className="flex w-[100px] justify-center items-center ">
             {userId === user?.id ? (
-              <Button variant="secondary" className="h-6">
+              <Button
+                variant="secondary"
+                className="h-6"
+                onClick={() => router.push("/settings/profile")}
+              >
                 프로필 수정
               </Button>
             ) : (

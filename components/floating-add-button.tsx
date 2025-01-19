@@ -2,9 +2,15 @@
 
 import useModal from "@/store/modal/modal-store";
 import { Plus } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 const FloatingAddButton = () => {
   const { openModal, setType, setData } = useModal();
+
+  const pathname = usePathname();
+  const isValidPath = ["/gallery", "/feed", "/like"].some((path) =>
+    pathname.includes(path)
+  );
 
   const handleOpenModal = () => {
     setType("post-upload");
@@ -17,6 +23,10 @@ const FloatingAddButton = () => {
     });
     openModal();
   };
+
+  if (!isValidPath) {
+    return null;
+  }
 
   return (
     <button

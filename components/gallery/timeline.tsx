@@ -10,6 +10,9 @@ interface TimelineProps {
   userId: string;
 }
 
+// 1. switch 변경 -> 수정 버튼 클릭 -> api/posts/[postId] -> auth 체크 -> findUnique -> 수정 -> invalidateQueries({queryKey: ["posts"]}) -> 데이터 새로 요청 ->
+// 낙관적 업데이트
+//
 const Timeline = ({ userId }: TimelineProps) => {
   const { selectedDate } = usePosts();
   const observerRef = useRef<HTMLDivElement | null>(null);

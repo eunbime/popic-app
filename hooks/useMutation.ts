@@ -1,11 +1,28 @@
+import { z } from "zod";
+import axios from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { PostUploadSchema } from "@/schemas";
 import { TPostWithLikes } from "@/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { z } from "zod";
 
 export const useCustomMutation = () => {
   const queryClient = useQueryClient();
+
+  const uploadMutation = useMutation({
+    mutationFn: async (values: z.infer<typeof PostUploadSchema>) => {
+      console.log({ values });
+      await axios.post("/api/posts", {
+        ...values,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts", null] });
+      queryClient.invalidateQueries({ queryKey: ["post-dates"] });
+    },
+    onError: (error) => {
+      console.log("[POST_UPLOAD_ERROR]", error);
+    },
+  });
 
   const deleteMutation = useMutation({
     mutationFn: async (post: TPostWithLikes) => {
@@ -15,35 +32,13 @@ export const useCustomMutation = () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["post-dates"] });
     },
-  });
-
-  const uploadMutation = useMutation({
-    mutationFn: async ({
-      values,
-      userId,
-    }: {
-      values: z.infer<typeof PostUploadSchema>;
-      userId: string;
-    }) => {
-      await axios.post("/api/posts", {
-        ...values,
-        authorId: userId,
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["posts"],
-      });
-      queryClient.invalidateQueries({ queryKey: ["posts", null] });
-      queryClient.invalidateQueries({ queryKey: ["post-dates"] });
-    },
     onError: (error) => {
-      console.log("[POST_UPLOAD_ERROR]", error);
+      console.log("[DELETE_POST_ERROR]", error);
     },
   });
 
   const editMutation = useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       values,
       postId,
     }: {
@@ -51,14 +46,12 @@ export const useCustomMutation = () => {
       postId: string;
     }) => {
       if (!postId) throw new Error("Post ID is required");
-
-      return axios.put(`/api/posts/${postId}`, values);
+      await axios.put(`/api/posts/${postId}`, values);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["posts"],
       });
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["post-dates"] });
     },
     onError: (error) => {
@@ -66,5 +59,5 @@ export const useCustomMutation = () => {
     },
   });
 
-  return { deleteMutation, uploadMutation, editMutation };
+  return { uploadMutation, deleteMutation, editMutation };
 };

@@ -1,4 +1,4 @@
-import { Switch } from "../ui/switch";
+import { Switch } from "@/components/ui/switch";
 
 interface PrivateSwitchProps {
   isPrivate: boolean;
@@ -6,11 +6,12 @@ interface PrivateSwitchProps {
 }
 
 const PrivateSwitch = ({ isPrivate, setIsPrivate }: PrivateSwitchProps) => {
+  console.log({ isPrivate });
   return (
     <Switch
       className="w-10 h-6"
       checked={isPrivate}
-      onCheckedChange={(checked) => setIsPrivate(checked)}
+      onCheckedChange={setIsPrivate}
     />
   );
 };
