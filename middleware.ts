@@ -58,6 +58,6 @@ export const config = {
     "/api/users/:path*",
     "/settings/:path*",
     "/",
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };

@@ -1,12 +1,12 @@
 import type { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
+import Google from "next-auth/providers/google";
 import { compare } from "bcryptjs";
 import { db } from "./db";
 
 export default {
   providers: [
-    GoogleProvider({
+    Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
@@ -15,6 +15,14 @@ export default {
           access_type: "offline",
           response_type: "code",
         },
+      },
+      profile(profile) {
+        return {
+          id: profile.sub,
+          email: profile.email,
+          name: profile.name,
+          image: profile.picture,
+        };
       },
     }),
     CredentialsProvider({
@@ -65,19 +73,27 @@ export default {
 
       if (account?.provider === "google") {
         try {
-          const existingUser = await db.user.findUnique({
+          let dbUser = await db.user.findUnique({
             where: { email: user.email! },
           });
-          if (!existingUser) {
-            const newUser = await db.user.create({
+
+          if (!dbUser) {
+            dbUser = await db.user.create({
               data: {
                 email: user.email!,
                 name: user.name!,
                 image: user.image,
+                accounts: {
+                  create: {
+                    type: account.type,
+                    provider: account.provider,
+                    providerAccountId: account.providerAccountId,
+                  },
+                },
               },
             });
-            return !!newUser;
           }
+          user.id = dbUser.id;
           return true;
         } catch (error) {
           console.error("Error creating user", error);
@@ -86,16 +102,8 @@ export default {
       }
       return true;
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
-        if (account?.provider === "google") {
-          const dbUser = await db.user.findUnique({
-            where: { email: token.email! },
-          });
-          if (dbUser) {
-            token.id = dbUser.id;
-          }
-        }
         token.id = user.id;
       }
       return token;
