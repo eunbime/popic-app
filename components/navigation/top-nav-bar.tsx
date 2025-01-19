@@ -28,7 +28,7 @@ const TopNavBar = () => {
       <Link
         href={`/gallery/${user?.id}`}
         className={cn(
-          "flex justify-center items-center bg-gray-200 text-black px-7 rounded-full py-1",
+          "flex justify-center items-center bg-gray-200 text-black px-7 rounded-full py-1 hover:opacity-80 transition-opacity duration-300",
           isGallery && "bg-gray-400"
         )}
       >
@@ -37,7 +37,7 @@ const TopNavBar = () => {
       <Link
         href={`/calendar/${user?.id}`}
         className={cn(
-          "flex justify-center items-center bg-gray-200 text-black px-7 rounded-full py-1",
+          "flex justify-center items-center bg-gray-200 text-black px-7 rounded-full py-1 hover:opacity-80 transition-opacity duration-300",
           isCalendar && "bg-gray-400"
         )}
       >

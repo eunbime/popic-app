@@ -9,7 +9,8 @@ export type ModalType =
   | "profile"
   | "timeline"
   | "delete-confirm"
-  | "edit-confirm";
+  | "edit-confirm"
+  | "save-confirm";
 
 export type ModalData = null | {
   post?: Post | null;

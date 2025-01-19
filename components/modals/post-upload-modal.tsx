@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import PrivateSwitch from "@/components/gallery/private-switch";
 import FileUpload from "@/components/file-upload";
 import { useQueryClient } from "@tanstack/react-query";
+import useUser from "@/store/user/user-store.";
 
 const PostUploadModal = () => {
   const {
@@ -27,6 +28,8 @@ const PostUploadModal = () => {
     openModal,
     closeModal,
   } = useModal();
+
+  const { user } = useUser();
 
   const queryClient = useQueryClient();
 
@@ -93,14 +96,17 @@ const PostUploadModal = () => {
           }
         );
       } else {
-        await uploadPost(values, {
-          onSettled: async () => {
-            await queryClient.invalidateQueries().then(() => {
-              setIsSettling(false);
-              closeModal();
-            });
-          },
-        });
+        await uploadPost(
+          { values, authorId: user?.id as string },
+          {
+            onSettled: async () => {
+              await queryClient.invalidateQueries().then(() => {
+                setIsSettling(false);
+                closeModal();
+              });
+            },
+          }
+        );
       }
     } catch (error) {
       setIsSettling(false);

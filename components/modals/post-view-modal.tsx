@@ -28,8 +28,6 @@ const PostUploadModal = () => {
 
   useScrollLock(isOpen);
 
-  if (!isOpen || type !== "post-view") return null;
-
   const handleEdit = () => {
     setType("post-upload");
   };
@@ -43,6 +41,10 @@ const PostUploadModal = () => {
       description: "삭제된 포스트는 복구할 수 없습니다.",
     });
   };
+
+  console.log("postData", postData);
+
+  if (!isOpen || type !== "post-view") return null;
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
@@ -63,18 +65,19 @@ const PostUploadModal = () => {
         </div>
         <div className="flex flex-col w-full h-[700px] items-center justify-between gap-4">
           <div className="flex flex-col items-center justify-center gap-4">
-            <Image
-              src={
-                postData?.post?.imageUrl ||
-                "https://via.placeholder.com/350x350?text=photo"
-              }
-              alt="gallery"
-              width={350}
-              height={350}
-              className="object-cover"
-            />
-            <p className="text-md font-bold">{postData?.post?.title}</p>
-            <p className="text-sm px-7 text-gray-500 line-clamp-10 break-all overflow-y-auto">
+            {postData?.post?.imageUrl && (
+              <Image
+                src={postData.post.imageUrl}
+                alt="gallery"
+                width={350}
+                height={350}
+                className="object-cover"
+              />
+            )}
+            <p className="text-xl font-bold w-full text-center">
+              {postData?.post?.title}
+            </p>
+            <p className="text-sm px-7 w-full text-center text-gray-500 line-clamp-10 break-all overflow-y-auto">
               {postData?.post?.content}
             </p>
           </div>

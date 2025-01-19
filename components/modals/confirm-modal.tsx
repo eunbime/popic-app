@@ -19,7 +19,12 @@ const ConfirmModal = () => {
     }
   };
 
-  if (!isOpen || (type !== "delete-confirm" && type !== "edit-confirm"))
+  if (
+    !isOpen ||
+    (type !== "delete-confirm" &&
+      type !== "edit-confirm" &&
+      type !== "save-confirm")
+  )
     return null;
 
   return (

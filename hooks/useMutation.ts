@@ -9,10 +9,16 @@ export const useCustomMutation = () => {
   const queryClient = useQueryClient();
 
   const uploadMutation = useMutation({
-    mutationFn: async (values: z.infer<typeof PostUploadSchema>) => {
-      console.log({ values });
+    mutationFn: async ({
+      values,
+      authorId,
+    }: {
+      values: z.infer<typeof PostUploadSchema>;
+      authorId: string;
+    }) => {
       await axios.post("/api/posts", {
         ...values,
+        authorId,
       });
     },
     onSuccess: () => {

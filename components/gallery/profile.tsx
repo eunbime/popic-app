@@ -38,11 +38,11 @@ const Profile = ({ userId }: ProfileProps) => {
               className="object-cover"
             />
           </div>
-          <div className="flex flex-col w-[230px] h-[100px] bg-gray-200 rounded-lg px-4 py-3 gap-2">
-            <span className="text-sm font-bold text-gray-900">
+          <div className="flex flex-col w-[230px] h-[100px] bg-white dark:bg-gray-800 rounded-lg px-4 py-3 gap-2">
+            <span className="text-sm font-bold text-gray-900 dark:text-white">
               {userData?.name}
             </span>
-            <p className="text-sm text-gray-500 ">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               {userData?.bio ?? "바이오가 작성되지 않았습니다."}
             </p>
           </div>
@@ -52,7 +52,7 @@ const Profile = ({ userId }: ProfileProps) => {
             {userId === user?.id ? (
               <Button
                 variant="secondary"
-                className="h-6"
+                className="h-7 text-gray-700 bg-gray-200 dark:bg-gray-600 hover:dark:bg-gray-700 dark:text-gray-200"
                 onClick={() => router.push("/settings/profile")}
               >
                 프로필 수정

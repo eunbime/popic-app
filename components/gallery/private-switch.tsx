@@ -6,7 +6,6 @@ interface PrivateSwitchProps {
 }
 
 const PrivateSwitch = ({ isPrivate, setIsPrivate }: PrivateSwitchProps) => {
-  console.log({ isPrivate });
   return (
     <Switch
       className="w-10 h-6"

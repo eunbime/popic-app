@@ -13,10 +13,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUser } from "@/api/user";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import useModal from "@/store/modal/modal-store";
 
 const ProfileForm = () => {
   const [isImageUploaded, setIsImageUploaded] = useState(false);
   const queryClient = useQueryClient();
+
+  const { openModal, setType, setData } = useModal();
 
   const { data: userData } = useQuery({
     queryKey: ["user"],
@@ -58,7 +61,15 @@ const ProfileForm = () => {
   });
 
   const onSubmit = (data: z.infer<typeof ProfileSchema>) => {
-    updateUser(data);
+    openModal();
+    setType("save-confirm");
+    setData({
+      title: "저장하기",
+      description: "변경사항을 저장하시겠습니까?",
+      onConfirm: () => {
+        updateUser(data);
+      },
+    });
   };
 
   return (

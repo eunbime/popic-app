@@ -17,18 +17,18 @@ const HeartButton = ({ post, userId }: HeartButtonProps) => {
   return (
     <button
       disabled={isLoading}
-      className="hover:opacity-70 transition-opacity duration-300"
+      className="hover:opacity-80 hover:scale-105 transition-all duration-300"
       onClick={(e) => {
         e.stopPropagation();
         toggleLike();
       }}
     >
       {isLiked ? (
-        <IoHeart className="w-7 h-7 text-red-500" />
+        <IoHeart className="w-7 h-7 text-red-600" />
       ) : (
-        <IoHeartOutline className="w-7 h-7 text-gray-500" />
+        <IoHeartOutline className="w-7 h-7 text-black opacity-50 cursor-pointer" />
       )}
-      <span className="text-sm text-gray-500">{likesCount}</span>
+      <span className="text-sm text-black opacity-50">{likesCount}</span>
     </button>
   );
 };

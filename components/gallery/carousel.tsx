@@ -58,9 +58,12 @@ const Carousel = ({ userId }: CarouselProps) => {
         onClick={() => swiperRef.current?.slidePrev()}
         className={cn(
           "absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white/50 rounded-full hover:bg-white/80",
-          dateGroups?.length && dateGroups?.length < 5 && "opacity-0"
+          (dateGroups?.length && dateGroups?.length < 5) ||
+            (dateGroups?.length === 0 && "opacity-0")
         )}
-        disabled={dateGroups && dateGroups.length < 5}
+        disabled={
+          (dateGroups && dateGroups.length < 5) || dateGroups?.length === 0
+        }
       >
         ←
       </button>

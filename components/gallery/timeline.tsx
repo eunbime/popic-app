@@ -30,7 +30,11 @@ const Timeline = ({ userId }: TimelineProps) => {
   return (
     <div className="w-full h-full flex flex-col">
       <div className="w-full h-full flex justify-center items-center p-10">
-        {posts?.pages?.[0].length === 0 && <div>오늘의 포스터가 없습니다.</div>}
+        {posts?.pages?.[0].length === 0 && (
+          <div className="font-bold text-lg text-gray-600">
+            오늘의 포스트가 없습니다.
+          </div>
+        )}
       </div>
       {posts?.pages.map((group) =>
         group.map((post) => (

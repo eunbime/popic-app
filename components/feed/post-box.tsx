@@ -17,7 +17,7 @@ const PostBox = ({ post }: PostBoxProps) => {
 
   const handlePostClick = () => {
     setType("post-view");
-    setData(post);
+    setData({ post });
     openModal();
   };
 
@@ -27,42 +27,42 @@ const PostBox = ({ post }: PostBoxProps) => {
 
   return (
     <div className="w-full h-full flex gap-10">
-      <div className="flex flex-col gap-2 items-center">
+      <div className="flex flex-col gap-2 items-center group h-fit">
         <div
           className="w-[80px] h-[80px] rounded-full overflow-hidden bg-gray-200 cursor-pointer"
           onClick={handleAuthorClick}
         >
-          <Image
-            src={
-              post.author.image ||
-              "https://via.placeholder.com/80x80?text=profile"
-            }
-            alt="post"
-            width={80}
-            height={80}
-          />
+          {post.author.image && (
+            <Image
+              src={post.author.image}
+              alt="post"
+              width={80}
+              height={80}
+              className="group-hover:opacity-70 transition-opacity duration-300"
+            />
+          )}
         </div>
         <p
-          className="text-sm font-semibold text-gray-500 cursor-pointer"
+          className="text-sm font-semibold text-gray-500 cursor-pointer group-hover:dark:text-white group-hover:text-black transition-colors duration-300"
           onClick={handleAuthorClick}
         >
           {post.author.name}
         </p>
       </div>
-      <div className="flex-1 w-full h-full flex flex-col">
+      <div className="grid grid-cols-1 w-full h-full">
         <div
           onClick={handlePostClick}
-          className="relative w-[200px] h-[200px] rounded-md overflow-hidden bg-gray-400 cursor-pointer"
+          className="relative w-full max-w-[400px] aspect-square rounded-md overflow-hidden bg-gray-400 cursor-pointer"
         >
-          <Image
-            src={
-              post.imageUrl || "https://via.placeholder.com/250x250?text=image"
-            }
-            alt="post"
-            width={200}
-            height={200}
-            className="object-cover"
-          />
+          {post.imageUrl && (
+            <Image
+              src={post.imageUrl}
+              alt="post"
+              fill
+              sizes="(max-width: 400px) 100vw, 400px"
+              className="object-cover hover:opacity-90 hover:scale-105 transition-all duration-300"
+            />
+          )}
           <div className="absolute top-2 right-2">
             <HeartButton post={post} userId={user?.id} />
           </div>
