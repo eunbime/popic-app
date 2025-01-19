@@ -7,13 +7,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 보호된 경로 목록
-  const protectedPaths = [
-    "/gallery",
-    "/settings",
-    "/profile",
-    "/api/posts",
-    "/api/users",
-  ];
+  const protectedPaths = ["/gallery", "/settings", "/profile", "/social"];
 
   // Auth 관련 public 경로
   const authPublicPaths = ["/api/auth", "/auth/callback"];
@@ -53,9 +47,8 @@ export const config = {
   matcher: [
     "/gallery/:path*",
     "/profile/:path*",
+    "/social/:path*",
     "/auth/:path*",
-    "/api/posts/:path*",
-    "/api/users/:path*",
     "/settings/:path*",
     "/",
     "/((?!api|_next/static|_next/image|favicon.ico).*)",
