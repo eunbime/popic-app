@@ -45,10 +45,9 @@ export const GET = async (request: Request) => {
       orderBy: {
         date: "desc",
       },
-      skip,
       take: limit,
+      skip,
     });
-    console.log("Found posts:", posts); // 조회된 게시물 확인
 
     return NextResponse.json(posts);
   } catch (error) {

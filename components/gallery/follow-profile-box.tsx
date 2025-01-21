@@ -12,12 +12,12 @@ const FollowProfileBox = ({ user }: FollowProfileBoxProps) => {
   return (
     <div className="flex items-center justify-center gap-2 w-full px-10">
       {/* 프로필 이미지 */}
-      <div className="min-w-[50px] min-h-[50px] rounded-full overflow-hidden">
+      <div className="relative min-w-[50px] min-h-[50px] rounded-full overflow-hidden">
         <Image
           src={user.image as string}
           alt={user.name as string}
-          width={50}
-          height={50}
+          fill
+          className="object-cover w-full h-full"
         />
       </div>
       {/* 이름 */}

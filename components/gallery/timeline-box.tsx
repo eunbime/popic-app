@@ -50,16 +50,20 @@ const TimelineBox = ({ post, userId }: TimelineBoxProps) => {
       onClick={handleImageClick}
     >
       <p className="text-md font-bold">{formatDateForTimeline(post.date)}</p>
-      <div className="w-[350px] h-[350px] overflow-hidden">
-        <Image
-          src={
-            post.imageUrl || "https://via.placeholder.com/350x350?text=photo"
-          }
-          alt="gallery"
-          width={350}
-          height={350}
-          className="object-cover"
-        />
+      <div className="w-[350px] h-[350px] overflow-hidden bg-gray-200">
+        {post.imageUrl ? (
+          <Image
+            src={post.imageUrl}
+            alt="gallery"
+            width={350}
+            height={350}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-[200px] h-[200px] bg-gray-200 flex items-center justify-center">
+            <p className="text-gray-500">No image</p>
+          </div>
+        )}
       </div>
       <p className="text-md text-semibold text-gray-500">{post.title}</p>
       <div className="absolute top-8 right-2">

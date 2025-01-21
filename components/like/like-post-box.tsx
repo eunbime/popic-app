@@ -17,7 +17,7 @@ const LikePostBox = ({ post }: LikePostBoxProps) => {
         alt="Like Post"
         width={120}
         height={120}
-        className="object-cover"
+        className="w-full h-full object-cover"
       />
       <div className="absolute top-2 right-2">
         <HeartButton post={post} userId={user?.id} />

@@ -23,6 +23,11 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith(path)
   );
 
+  // API 경로는 미들웨어 처리 건너뛰기
+  if (pathname.startsWith("/api/")) {
+    return NextResponse.next();
+  }
+
   // Auth 관련 public 경로는 미들웨어 처리 건너뛰기
   if (isAuthPublicPath) {
     return NextResponse.next();

@@ -41,6 +41,8 @@ export const useInfinitePosts = ({
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.length < POSTS_PER_PAGE) return undefined;
+      // console.log("allPages", allPages.length * POSTS_PER_PAGE);
+
       return allPages.length + 1;
     },
     enabled: !!selectedDate || !!selectedFilter,
@@ -63,7 +65,7 @@ export const useInfinitePosts = ({
     return () => {
       observer.disconnect();
     };
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage, observerRef]);
 
   return {
     posts,

@@ -52,14 +52,15 @@ export const getDateGroupsByUserId = async (
 
 export const getFeedPosts = async (
   filter?: string | null,
-  skip: number = 0,
-  take: number = 5
+  page: number = 1,
+  limit: number = 5
 ): Promise<TPostsWithAuthorAndLikes[]> => {
+  const skip = (page - 1) * limit;
   const { data } = await axios.get("/api/posts/feed", {
     params: {
       filter,
       skip,
-      take,
+      limit,
     },
   });
   return data;
