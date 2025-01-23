@@ -38,15 +38,15 @@ export const getPostsByDate = async (
   return data;
 };
 
-export const getDateGroups = async (): Promise<DateGroup[]> => {
-  const { data } = await axios.get("/api/posts/date-groups");
-  return data;
-};
-
 export const getDateGroupsByUserId = async (
-  userId: string
+  userId: string,
+  beforeDate?: Date
 ): Promise<DateGroup[]> => {
-  const { data } = await axios.get(`/api/posts/date-groups/${userId}`);
+  const { data } = await axios.get(`/api/posts/date-groups/${userId}`, {
+    params: {
+      beforeDate: beforeDate?.toISOString(),
+    },
+  });
   return data;
 };
 

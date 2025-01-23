@@ -10,9 +10,6 @@ interface TimelineProps {
   userId: string;
 }
 
-// 1. switch 변경 -> 수정 버튼 클릭 -> api/posts/[postId] -> auth 체크 -> findUnique -> 수정 -> invalidateQueries({queryKey: ["posts"]}) -> 데이터 새로 요청 ->
-// 낙관적 업데이트
-//
 const Timeline = ({ userId }: TimelineProps) => {
   const { selectedDate } = usePosts();
   const observerRef = useRef<HTMLDivElement | null>(null);
@@ -29,9 +26,9 @@ const Timeline = ({ userId }: TimelineProps) => {
 
   return (
     <div className="w-full h-full flex flex-col">
-      <div className="w-full h-full flex justify-center items-center p-10">
+      <div className="w-full h-full flex justify-center items-center pt-5">
         {posts?.pages?.[0].length === 0 && (
-          <div className="font-bold text-lg text-gray-600">
+          <div className="font-bold text-lg text-gray-600 pt-20">
             오늘의 포스트가 없습니다.
           </div>
         )}

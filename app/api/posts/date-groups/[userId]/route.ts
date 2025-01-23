@@ -1,56 +1,90 @@
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextRequest } from "next/server";
 
 export async function GET(
-  req: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
+    const session = await auth();
+    const searchParams = request.nextUrl.searchParams;
+    const beforeDate = searchParams.get("beforeDate");
     const { userId } = await params;
-    // 모든 포스트를 날짜순으로 가져옴
-    const posts = await db.post.findMany({
+    const LIMIT = 4;
+
+    if (!session) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // 먼저 날짜만 추출하여 고유한 날짜 목록 가져오기
+    const uniqueDates = await db.post.findMany({
       where: {
         authorId: userId,
-      },
-      orderBy: {
-        date: "asc",
+        date: {
+          lt: beforeDate ? new Date(beforeDate) : new Date(),
+        },
       },
       select: {
-        id: true,
         date: true,
-        imageUrl: true,
+      },
+      orderBy: {
+        date: "desc",
       },
     });
 
-    // 날짜별로 그룹화
-    const groupedPosts = posts.reduce(
-      (groups: { [key: string]: number }, post) => {
-        // UTC 날짜를 KST(UTC+9)로 변환
-        const utcDate = new Date(post.date);
-        const kstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
-        const date = kstDate.toISOString().split("T")[0];
+    // 날짜만 비교하여 중복 제거
+    const dateSet = [
+      ...new Set(
+        uniqueDates.map(({ date }) => date.toISOString().split("T")[0])
+      ),
+    ];
+    const limitedDates = dateSet.slice(0, LIMIT);
 
-        groups[date] = (groups[date] || 0) + 1;
-        return groups;
-      },
-      {}
+    const result = await Promise.all(
+      limitedDates.map(async (dateStr) => {
+        const date = new Date(dateStr);
+        const nextDate = new Date(dateStr);
+        nextDate.setDate(nextDate.getDate() + 1);
+
+        const [count, post] = await Promise.all([
+          db.post.count({
+            where: {
+              authorId: userId,
+              date: {
+                gte: date,
+                lt: nextDate,
+              },
+            },
+          }),
+          db.post.findFirst({
+            where: {
+              authorId: userId,
+              date: {
+                gte: date,
+                lt: nextDate,
+              },
+            },
+            select: {
+              imageUrl: true,
+            },
+            orderBy: {
+              date: "desc",
+            },
+          }),
+        ]);
+
+        return {
+          date: dateStr,
+          count,
+          thumbnailUrl: post?.imageUrl ?? null,
+        };
+      })
     );
 
-    // 배열 형태로 변환
-    const dateGroups = Object.entries(groupedPosts).map(([date, count]) => ({
-      date,
-      count,
-      thumbnailUrl:
-        posts.find((post) => {
-          const utcDate = new Date(post.date);
-          const kstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
-          return kstDate.toISOString().split("T")[0] === date && post.imageUrl;
-        })?.imageUrl || null,
-    }));
-
-    return Response.json(dateGroups);
+    return Response.json(result);
   } catch (error) {
-    console.log("[POSTS_DATE_GROUPS_GET_ERROR]", error);
+    console.error("[POSTS_DATE_GROUPS_GET_ERROR]", error);
     return Response.json(
       { message: "Failed to fetch date groups" },
       { status: 500 }

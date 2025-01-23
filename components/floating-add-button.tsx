@@ -8,7 +8,7 @@ const FloatingAddButton = () => {
   const { openModal, setType, setData } = useModal();
 
   const pathname = usePathname();
-  const isValidPath = ["/gallery", "/feed", "/like"].some((path) =>
+  const isValidPath = ["/gallery", "/feed", "/like", "/calendar"].some((path) =>
     pathname.includes(path)
   );
 

@@ -38,6 +38,7 @@ const CalendarPostList = ({ selectedDateForPost }: CalendarPostListProps) => {
               alt={post.title}
               width={80}
               height={80}
+              className="object-cover w-full h-full"
             />
           </div>
         </div>

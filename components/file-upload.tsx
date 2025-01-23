@@ -24,10 +24,7 @@ const FileUpload = ({ onChange, value, endpoint }: FileUploadProps) => {
     return (
       <div>
         <Image
-          src={
-            (imageUrl as string) ||
-            "https://via.placeholder.com/200x200?text=Profile"
-          }
+          src={imageUrl as string}
           alt="Upload"
           fill
           className="object-cover"

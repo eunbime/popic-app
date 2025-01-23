@@ -6,6 +6,7 @@ interface CarouselCardProps {
   count: number;
   onClick: () => void;
   thumbnailUrl: string | null;
+  isSelected?: boolean;
 }
 
 const CarouselCard = ({
@@ -19,15 +20,16 @@ const CarouselCard = ({
       className="flex items-center justify-center h-full bg-gray-200 relative cursor-pointer"
       onClick={onClick}
     >
-      {thumbnailUrl && (
-        <Image
-          src={thumbnailUrl}
-          alt="thumbnail"
-          width={100}
-          height={100}
-          className="w-full h-full object-cover absolute top-0 left-0"
-        />
-      )}
+      <div className="w-[80px] h-[80px] bg-gray-200 rounded-md overflow-hidden">
+        {thumbnailUrl && (
+          <Image
+            src={thumbnailUrl}
+            alt="thumbnail"
+            fill
+            className="w-full h-full object-cover absolute top-0 left-0"
+          />
+        )}
+      </div>
       <div className="flex justify-center w-full h-full gap-1 bg-gray-200">
         <span className="absolute bottom-[5px] left-[2px] text-[8px] text-white bg-black rounded-md opacity-20 px-1">
           {format(date, "yyyy.MM.dd")}

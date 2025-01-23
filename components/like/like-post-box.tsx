@@ -13,7 +13,7 @@ const LikePostBox = ({ post }: LikePostBoxProps) => {
   return (
     <div className="relative w-[120px] h-[120px] rounded-sm overflow-hidden bg-gray-400">
       <Image
-        src={post.imageUrl || "https://via.placeholder.com/120x120?text=image"}
+        src={post.imageUrl as string}
         alt="Like Post"
         width={120}
         height={120}
