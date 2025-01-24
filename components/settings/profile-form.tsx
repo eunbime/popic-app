@@ -26,8 +26,6 @@ const ProfileForm = () => {
     queryFn: () => getUser(),
   });
 
-  console.log(userData);
-
   const form = useForm<z.infer<typeof ProfileSchema>>({
     resolver: zodResolver(ProfileSchema),
     defaultValues: {
@@ -75,7 +73,7 @@ const ProfileForm = () => {
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="flex flex-col w-full h-full"
+      className="flex flex-col w-full h-full overflow-y-auto pb-16"
     >
       <div className="flex items-center justify-center w-full py-5">
         <div className="relative w-[200px] h-[200px] bg-black rounded-md overflow-hidden">

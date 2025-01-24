@@ -8,7 +8,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="flex flex-col w-full h-full justify-start items-start border-b divide-y divide-gray-200 ">
+    <div className="flex flex-col w-full h-full justify-start items-start border-b divide-y dark:divide-gray-800 divide-gray-200 p-2 ">
       <Link className="w-full p-4" href="/settings/profile">
         Profile
       </Link>

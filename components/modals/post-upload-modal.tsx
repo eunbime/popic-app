@@ -131,10 +131,10 @@ const PostUploadModal = () => {
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
       <div
-        className="w-[400px] h-full bg-white rounded-md"
+        className="w-[400px] h-full rounded-md dark:bg-gray-900 bg-white overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between items-center p-4 border-b border-gray-200 mb-5">
+        <div className="flex justify-between items-center p-4 border-b dark:border-gray-700 border-gray-200 mb-5">
           <h1 className="text-2xl font-bold">Upload Post</h1>
           <button
             className="text-2xl font-bold"
@@ -146,7 +146,7 @@ const PostUploadModal = () => {
         </div>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col items-center justify-center gap-4"
+          className="flex flex-col items-center justify-center gap-4 pb-10"
         >
           {/* 이미지 업로드 */}
           <div

@@ -17,7 +17,7 @@ const LikePostList = () => {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className=" grid grid-cols-3 gap-5 p-5">
+    <div className="grid grid-cols-3 gap-5 p-7">
       {posts?.map((post) => (
         <LikePostBox key={post.id} post={post} />
       ))}

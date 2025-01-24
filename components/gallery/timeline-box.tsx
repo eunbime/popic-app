@@ -46,7 +46,7 @@ const TimelineBox = ({ post, userId }: TimelineBoxProps) => {
 
   return (
     <div
-      className="w-[350px] h-[430px] mx-auto mt-5 group relative cursor-pointer"
+      className="w-[350px] h-[430px] mx-auto mt-5 group relative cursor-pointer flex flex-col item-start gap-2"
       onClick={handleImageClick}
     >
       <p className="text-md font-bold">{formatDateForTimeline(post.date)}</p>
@@ -65,11 +65,13 @@ const TimelineBox = ({ post, userId }: TimelineBoxProps) => {
           </div>
         )}
       </div>
-      <p className="text-md text-semibold text-gray-500">{post.title}</p>
-      <div className="absolute top-8 right-2">
+      <p className="text-md text-semibold text-gray-500 break-all line-clamp-1">
+        {post.title}
+      </p>
+      <div className="absolute top-10 right-2">
         <HeartButton post={post} userId={userId} />
       </div>
-      <div className="absolute flex gap-2 bottom-3 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <div className="absolute flex gap-2 bottom-[55px] right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <Button type="button" onClick={handleEdit}>
           <PencilIcon className="w-4 h-4" />
         </Button>

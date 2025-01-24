@@ -8,9 +8,11 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { useMemo, useRef, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import CarouselCard from "./carousel-card";
-import usePosts from "@/store/posts/posts-store";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+
 import { getDateGroupsByUserId } from "@/api/posts";
+import usePosts from "@/store/posts/posts-store";
+import CarouselCard from "@/components/gallery/carousel-card";
 
 interface CarouselProps {
   userId: string;
@@ -23,7 +25,7 @@ const Carousel = ({ userId }: CarouselProps) => {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ["date-groups", userId],
+      queryKey: ["post-dates", userId],
       queryFn: async ({ pageParam = new Date() }) => {
         const result = await getDateGroupsByUserId(userId, pageParam);
         return result.sort(
@@ -39,7 +41,6 @@ const Carousel = ({ userId }: CarouselProps) => {
     });
 
   const allGroups = useMemo(() => {
-    // 각 페이지의 데이터를 역순으로 합치기
     return (
       data?.pages.reduce((acc, page) => {
         return [...page, ...acc];
@@ -51,14 +52,7 @@ const Carousel = ({ userId }: CarouselProps) => {
     if (isLoading || isFetchingNextPage || !hasNextPage) return;
     setIsLoading(true);
     try {
-      // const currentIndex = swiperRef.current?.activeIndex ?? 0;
       await fetchNextPage();
-      // 새로운 데이터가 로드된 후 현재 슬라이드 위치 조정
-      // setTimeout(() => {
-      //   if (swiperRef.current) {
-      //     swiperRef.current.slideTo(currentIndex + 3, 0);
-      //   }
-      // }, 0);
     } catch (error) {
       console.error("Failed to load more dates:", error);
     } finally {
@@ -131,34 +125,18 @@ const Carousel = ({ userId }: CarouselProps) => {
         <>
           <button
             onClick={handlePrev}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-6 h-6 bg-white text-black rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 disabled:opacity-50"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-6 h-full dark:text-white text-black flex items-center justify-center hover:opacity-80 disabled:opacity-50"
             disabled={isLoading || isFetchingNextPage}
           >
-            ←
+            <IoIosArrowBack className="w-6 h-6" />
           </button>
           <button
             onClick={handleNext}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-6 h-6 bg-white text-black rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 disabled:opacity-50"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-6 h-full dark:text-white text-black flex items-center justify-center hover:opacity-80 disabled:opacity-50"
             disabled={isLoading}
           >
-            →
+            <IoIosArrowForward className="w-6 h-6" />
           </button>
-
-          <div className="absolute -bottom-10 left-0 right-0 flex justify-center gap-2 pb-2">
-            {Array.from({ length: Math.ceil(allGroups.length / 4) }).map(
-              (_, i) => (
-                <button
-                  key={i}
-                  onClick={() => swiperRef.current?.slideTo(i * 4)}
-                  className={`w-2 h-2 rounded-full transition-colors ${
-                    Math.floor((swiperRef.current?.activeIndex ?? 0) / 4) === i
-                      ? "bg-gray-800"
-                      : "bg-gray-300 hover:bg-gray-500"
-                  }`}
-                />
-              )
-            )}
-          </div>
         </>
       )}
     </div>

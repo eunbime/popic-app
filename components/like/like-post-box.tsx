@@ -11,12 +11,11 @@ const LikePostBox = ({ post }: LikePostBoxProps) => {
   const { user } = useUser();
 
   return (
-    <div className="relative w-[120px] h-[120px] rounded-sm overflow-hidden bg-gray-400">
+    <div className="relative w-[110px] h-[110px] rounded-sm overflow-hidden bg-gray-400">
       <Image
         src={post.imageUrl as string}
         alt="Like Post"
-        width={120}
-        height={120}
+        fill
         className="w-full h-full object-cover"
       />
       <div className="absolute top-2 right-2">

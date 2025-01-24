@@ -42,28 +42,26 @@ const PostUploadModal = () => {
     });
   };
 
-  console.log("postData", postData);
-
   if (!isOpen || type !== "post-view") return null;
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-      <div className="w-[400px] h-[800px] bg-white rounded-md">
-        <div className="flex justify-between items-center p-4 border-b border-gray-200 mb-5">
-          <h1 className="text-2xl font-bold">
+      <div className="w-[400px] h-full dark:bg-gray-900 bg-white rounded-md overflow-y-auto">
+        <div className="flex justify-between items-center py-3 px-4 border-b dark:border-gray-700 border-gray-200 mb-5 text-black dark:text-white">
+          <h1 className="text-xl font-bold">
             {postData?.post?.date
               ? formatDateForTimeline(new Date(postData.post.date))
               : ""}
           </h1>
           <button
-            className="text-2xl font-bold"
+            className="text-xl font-bold"
             onClick={closeModal}
             type="button"
           >
             X
           </button>
         </div>
-        <div className="flex flex-col w-full h-[700px] items-center justify-between gap-4">
+        <div className="flex flex-col w-full h-[750px] items-center justify-between gap-4 px-5">
           <div className="flex flex-col items-center justify-center gap-4">
             {postData?.post?.imageUrl && (
               <Image
@@ -74,17 +72,23 @@ const PostUploadModal = () => {
                 className="object-cover"
               />
             )}
-            <p className="text-xl font-bold w-full text-center">
+            <p className="text-xl font-bold w-full text-center break-all line-clamp-1 dark:text-white text-black ">
               {postData?.post?.title}
             </p>
-            <p className="text-sm px-7 w-full text-center text-gray-500 line-clamp-10 break-all overflow-y-auto">
+            <p className="text-sm w-full text-center text-gray-500 break-all">
               {postData?.post?.content}
             </p>
           </div>
           {user?.id === postData?.post?.authorId && (
-            <div className="flex justify-end items-center gap-2">
-              <Button onClick={handleEdit}>Edit</Button>
-              <Button onClick={handleDelete} disabled={isDeletePending}>
+            <div className="flex justify-end items-center gap-2 pb-10">
+              <Button variant="basic" onClick={handleEdit}>
+                Edit
+              </Button>
+              <Button
+                variant="basic"
+                onClick={handleDelete}
+                disabled={isDeletePending}
+              >
                 Delete
               </Button>
             </div>

@@ -17,10 +17,13 @@ const Header = () => {
   const isFeed = pathname === "/social/feed";
   const isLike = pathname === "/social/like";
   const isSettings = pathname === "/settings";
+  const isFollow = pathname.includes("/follow");
 
   const handleClick = (path: string) => {
     if (isHome || isFeed || isLike || isSettings) {
       router.push(path);
+    } else if (isFollow) {
+      router.push(`/gallery/${user?.id}`);
     } else {
       router.back();
     }
@@ -32,9 +35,12 @@ const Header = () => {
 
   return (
     <div className="fixed z-10 top-0 left-0 w-full h-[50px]">
-      <div className="max-w-[430px] mx-auto h-full bg-white dark:bg-gray-900 text-black dark:text-white flex justify-between items-center px-5 border-b border-gray-200">
+      <div className="max-w-[430px] mx-auto h-full bg-white dark:bg-gray-900 text-black dark:text-white flex justify-between items-center px-5 border-b border-gray-200 dark:border-gray-800">
         <div className="flex justify-center items-center">
-          <p onClick={() => handleClick(pathname)} className="cursor-pointer">
+          <p
+            onClick={() => handleClick(pathname)}
+            className="cursor-pointer font-semibold"
+          >
             {isHome ? (
               "Home"
             ) : isFeed ? (

@@ -51,8 +51,8 @@ const Profile = ({ userId }: ProfileProps) => {
           <div className="flex w-[100px] justify-center items-center ">
             {userId === user?.id ? (
               <Button
-                variant="secondary"
-                className="h-7 text-gray-700 bg-gray-200 dark:bg-gray-600 hover:dark:bg-gray-700 dark:text-gray-200"
+                variant="basic"
+                className="h-7 font-semibold text-gray-700 bg-gray-200 dark:bg-gray-600 hover:dark:bg-gray-700 dark:text-gray-200"
                 onClick={() => router.push("/settings/profile")}
               >
                 프로필 수정
