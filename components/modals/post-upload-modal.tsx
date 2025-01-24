@@ -119,7 +119,7 @@ const PostUploadModal = () => {
     setType("edit-confirm");
     setData({
       onConfirm: () => form.reset(),
-      title: "정말 나가시겠습니까?",
+      title: "저장하지 않으시겠습니까?",
       description: "작성한 내용이 사라집니다.",
       formData: currentValues,
     });
@@ -131,7 +131,7 @@ const PostUploadModal = () => {
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
       <div
-        className="w-[400px] h-full rounded-md dark:bg-gray-900 bg-white overflow-y-auto"
+        className="w-[400px] h-full rounded-md dark:bg-gray-900 bg-white text-black dark:text-white overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center p-4 border-b dark:border-gray-700 border-gray-200 mb-5">
@@ -202,6 +202,7 @@ const PostUploadModal = () => {
           <Button
             type="submit"
             disabled={isUploadPending || isEditPending || isSettling}
+            className="bg-black text-white dark:bg-white dark:text-black hover:opacity-80 transition-all duration-300"
           >
             {isUploadPending || isEditPending || isSettling
               ? "Loading..."

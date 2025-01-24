@@ -1,4 +1,5 @@
 import { PostUploadSchema } from "@/schemas";
+import { TPostsWithAuthorAndLikes } from "@/types";
 import { Post } from "@prisma/client";
 import { z } from "zod";
 import { create } from "zustand";
@@ -13,7 +14,7 @@ export type ModalType =
   | "save-confirm";
 
 export type ModalData = null | {
-  post?: Post | null;
+  post?: Post | TPostsWithAuthorAndLikes | null;
   onConfirm?: null | (() => void);
   title?: string;
   description?: string;

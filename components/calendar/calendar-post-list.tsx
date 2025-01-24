@@ -21,7 +21,7 @@ const CalendarPostList = ({ selectedDateForPost }: CalendarPostListProps) => {
 
   const handlePostClick = (post: TPostWithLikes) => {
     setType("post-view");
-    setData(post);
+    setData({ post });
     openModal();
   };
 

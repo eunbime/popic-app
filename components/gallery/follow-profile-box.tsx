@@ -2,6 +2,7 @@ import { User } from "@prisma/client";
 import Image from "next/image";
 import FollowButton from "./follow-button";
 import useUser from "@/store/user/user-store.";
+import { useRouter } from "next/navigation";
 
 interface FollowProfileBoxProps {
   user: User;
@@ -9,8 +10,17 @@ interface FollowProfileBoxProps {
 
 const FollowProfileBox = ({ user }: FollowProfileBoxProps) => {
   const { user: currentUser } = useUser();
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/gallery/${user.id}`);
+  };
+
   return (
-    <div className="flex items-center justify-center gap-2 w-full px-10">
+    <div
+      onClick={handleClick}
+      className="flex items-center justify-center py-2 gap-2 w-full px-10 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 cursor-pointer"
+    >
       {/* 프로필 이미지 */}
       <div className="relative min-w-[50px] min-h-[50px] rounded-full overflow-hidden">
         <Image

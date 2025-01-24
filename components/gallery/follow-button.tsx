@@ -34,8 +34,14 @@ const FollowButton = ({ userId }: FollowButtonProps) => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
     },
   });
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    toggleFollow();
+  };
+
   return (
-    <Button variant="secondary" className="h-6" onClick={() => toggleFollow()}>
+    <Button variant="secondary" className="h-6" onClick={handleClick}>
       {isFollowing ? "언팔로우" : "팔로우"}
     </Button>
   );
