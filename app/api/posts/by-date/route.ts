@@ -42,6 +42,7 @@ export async function GET(request: Request) {
           gte: startDate,
           lt: endDate,
         },
+        isPrivate: session.user.id === userId ? undefined : false,
       },
       include: {
         likes: true,

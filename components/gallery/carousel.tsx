@@ -127,34 +127,40 @@ const Carousel = ({ userId }: CarouselProps) => {
         ))}
       </Swiper>
 
-      <button
-        onClick={handlePrev}
-        className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-6 h-6 bg-white text-black rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 disabled:opacity-50"
-        disabled={isLoading || isFetchingNextPage}
-      >
-        ←
-      </button>
-      <button
-        onClick={handleNext}
-        className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-6 h-6 bg-white text-black rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 disabled:opacity-50"
-        disabled={isLoading}
-      >
-        →
-      </button>
-
-      <div className="absolute -bottom-10 left-0 right-0 flex justify-center gap-2 pb-2">
-        {Array.from({ length: Math.ceil(allGroups.length / 4) }).map((_, i) => (
+      {data?.pages && data.pages?.[0].length > 0 && (
+        <>
           <button
-            key={i}
-            onClick={() => swiperRef.current?.slideTo(i * 4)}
-            className={`w-2 h-2 rounded-full transition-colors ${
-              Math.floor((swiperRef.current?.activeIndex ?? 0) / 4) === i
-                ? "bg-gray-800"
-                : "bg-gray-300 hover:bg-gray-500"
-            }`}
-          />
-        ))}
-      </div>
+            onClick={handlePrev}
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-6 h-6 bg-white text-black rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 disabled:opacity-50"
+            disabled={isLoading || isFetchingNextPage}
+          >
+            ←
+          </button>
+          <button
+            onClick={handleNext}
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-6 h-6 bg-white text-black rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 disabled:opacity-50"
+            disabled={isLoading}
+          >
+            →
+          </button>
+
+          <div className="absolute -bottom-10 left-0 right-0 flex justify-center gap-2 pb-2">
+            {Array.from({ length: Math.ceil(allGroups.length / 4) }).map(
+              (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => swiperRef.current?.slideTo(i * 4)}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    Math.floor((swiperRef.current?.activeIndex ?? 0) / 4) === i
+                      ? "bg-gray-800"
+                      : "bg-gray-300 hover:bg-gray-500"
+                  }`}
+                />
+              )
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -24,6 +24,7 @@ export async function GET(
         date: {
           lt: beforeDate ? new Date(beforeDate) : new Date(),
         },
+        isPrivate: session.user.id === userId ? undefined : false,
       },
       select: {
         date: true,
@@ -55,6 +56,7 @@ export async function GET(
                 gte: date,
                 lt: nextDate,
               },
+              isPrivate: session.user.id === userId ? undefined : false,
             },
           }),
           db.post.findFirst({
@@ -64,6 +66,7 @@ export async function GET(
                 gte: date,
                 lt: nextDate,
               },
+              isPrivate: session.user.id === userId ? undefined : false,
             },
             select: {
               imageUrl: true,
