@@ -93,10 +93,10 @@ const Carousel = ({ userId }: CarouselProps) => {
         onBeforeInit={(swiper) => {
           swiperRef.current = swiper;
         }}
-        spaceBetween={15}
+        spaceBetween={5}
         slidesPerView={4}
         initialSlide={allGroups.length - 1}
-        className="h-full px-10 pb-10 w-[calc(100%-80px)]"
+        className="h-full px-10 pb-10 w-[calc(100%-60px)]"
       >
         {(isFetchingNextPage || isLoading) && (
           <SwiperSlide>
@@ -125,14 +125,14 @@ const Carousel = ({ userId }: CarouselProps) => {
         <>
           <button
             onClick={handlePrev}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-6 h-full dark:text-white text-black flex items-center justify-center hover:opacity-80 disabled:opacity-50"
+            className="absolute left-1 top-1/2 -translate-y-1/2 z-10 w-6 h-full dark:text-white text-black flex items-center justify-center hover:opacity-80 disabled:opacity-50"
             disabled={isLoading || isFetchingNextPage}
           >
             <IoIosArrowBack className="w-6 h-6" />
           </button>
           <button
             onClick={handleNext}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-6 h-full dark:text-white text-black flex items-center justify-center hover:opacity-80 disabled:opacity-50"
+            className="absolute right-1 top-1/2 -translate-y-1/2 z-10 w-6 h-full dark:text-white text-black flex items-center justify-center hover:opacity-80 disabled:opacity-50"
             disabled={isLoading}
           >
             <IoIosArrowForward className="w-6 h-6" />

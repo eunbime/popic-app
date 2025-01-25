@@ -85,12 +85,17 @@ const RegisterForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center justify-center text-black dark:text-white gap-4"
+      className="flex flex-col w-full items-center justify-center text-black dark:text-white gap-4"
     >
       {step === 1 && (
         <>
-          <h2 className="text-xl font-semibold">이메일을 입력하세요</h2>
-          <Input {...form.register("email")} type="email" placeholder="Email" />
+          <h2 className="text-xl font-semibold">이메일을 입력해주세요</h2>
+          <Input
+            {...form.register("email")}
+            type="email"
+            placeholder="Email"
+            className="w-[70%]"
+          />
           {errors.email && (
             <span className="text-red-500 text-sm">{errors.email.message}</span>
           )}
@@ -104,6 +109,7 @@ const RegisterForm = () => {
             {...form.register("password")}
             type="password"
             placeholder="Password"
+            className="w-[70%]"
           />
           {errors.password && (
             <span className="text-red-500 text-sm">
@@ -116,24 +122,29 @@ const RegisterForm = () => {
       {step === 3 && (
         <>
           <h2 className="text-xl font-semibold">이름을 입력하세요</h2>
-          <Input {...form.register("name")} type="text" placeholder="Name" />
+          <Input
+            {...form.register("name")}
+            type="text"
+            placeholder="Name"
+            className="w-[70%]"
+          />
           {errors.name && (
             <span className="text-red-500 text-sm">{errors.name.message}</span>
           )}
         </>
       )}
 
-      <div className="flex gap-2">
+      <div className="flex w-[70%] justify-end gap-2">
         {step > 1 && (
           <Button
             type="button"
-            variant="outline"
+            variant="secondary"
             onClick={() => setStep(step - 1)}
           >
             이전
           </Button>
         )}
-        <Button type="submit" variant="ghost" disabled={isPending}>
+        <Button type="submit" variant="basic" disabled={isPending}>
           {step === 3 ? "가입하기" : "다음"}
         </Button>
       </div>

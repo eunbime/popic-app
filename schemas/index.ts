@@ -16,18 +16,33 @@ export const RegisterSchema = z.object({
   password: z.string().min(6, {
     message: "비밀번호는 최소 6자 이상이어야 합니다.",
   }),
-  name: z.string().min(1, {
-    message: "이름은 필수 입력 항목입니다.",
-  }),
+  name: z
+    .string()
+    .min(1, {
+      message: "이름은 필수 입력 항목입니다.",
+    })
+    .max(20, {
+      message: "이름은 최대 20자까지 입력할 수 있습니다.",
+    }),
 });
 
 export const PostUploadSchema = z.object({
-  title: z.string().min(1, {
-    message: "제목은 필수 입력 항목입니다.",
-  }),
-  content: z.string().min(1, {
-    message: "내용은 필수 입력 항목입니다.",
-  }),
+  title: z
+    .string()
+    .min(1, {
+      message: "제목은 필수 입력 항목입니다.",
+    })
+    .max(30, {
+      message: "제목은 최대 30자까지 입력할 수 있습니다.",
+    }),
+  content: z
+    .string()
+    .min(1, {
+      message: "내용은 필수 입력 항목입니다.",
+    })
+    .max(500, {
+      message: "내용은 최대 500자까지 입력할 수 있습니다.",
+    }),
   date: z.date().optional(),
   imageUrl: z
     .string({

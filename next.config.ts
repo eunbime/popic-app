@@ -1,14 +1,16 @@
 import withPWA from "next-pwa";
 
+const nextConfig = {
+  images: {
+    unoptimized: true,
+  },
+};
+
 const config = withPWA({
   dest: "public",
   register: true,
   skipWaiting: true,
   disable: process.env.NODE_ENV === "development",
-})({
-  images: {
-    domains: ["utfs.io", "o4b06yr4hm.ufs.sh", "lh3.googleusercontent.com"],
-  },
-});
+})(nextConfig);
 
 export default config;

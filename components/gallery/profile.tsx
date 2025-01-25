@@ -33,12 +33,13 @@ const Profile = ({ userId }: ProfileProps) => {
                 alt="profile"
                 fill
                 className="object-cover w-full h-full"
+                priority
               />
             ) : (
               <div className="w-full h-full bg-gray-200 rounded-lg"></div>
             )}
           </div>
-          <div className="flex flex-col w-[230px] h-[100px] bg-white dark:bg-gray-800 rounded-lg px-4 py-3 gap-2">
+          <div className="flex flex-col w-[230px] h-[100px] bg-gray-100 dark:bg-gray-800 rounded-lg px-4 py-3 gap-2">
             <span className="text-sm font-bold text-gray-900 dark:text-white">
               {userData?.name}
             </span>

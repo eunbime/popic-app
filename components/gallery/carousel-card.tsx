@@ -17,16 +17,17 @@ const CarouselCard = ({
 }: CarouselCardProps) => {
   return (
     <div
-      className="flex items-center justify-center h-full bg-gray-200 relative cursor-pointer"
+      className="relative h-full bg-gray-200 cursor-pointer"
       onClick={onClick}
     >
-      <div className="w-[80px] h-[80px] bg-gray-200 rounded-md overflow-hidden">
+      <div className="relative w-full h-full bg-gray-200 overflow-hidden">
         {thumbnailUrl && (
           <Image
             src={thumbnailUrl}
             alt="thumbnail"
             fill
-            className="w-full h-full object-cover absolute top-0 left-0"
+            className="w-full h-full object-cover"
+            priority
           />
         )}
       </div>

@@ -40,20 +40,27 @@ const LoginForm = () => {
 
   return (
     <form
-      className="flex flex-col items-center justify-center text-black dark:text-white gap-4"
+      className="flex flex-col w-full items-center justify-center text-black dark:text-white gap-6"
       onSubmit={form.handleSubmit(handleSubmit)}
     >
-      <Input type="text" placeholder="Email" {...form.register("email")} />
-      <Input
-        type="password"
-        placeholder="Password"
-        {...form.register("password")}
-      />
-      {form.formState.errors.email && (
-        <p className="text-red-500">{form.formState.errors.email.message}</p>
-      )}
-      <Button variant="ghost" type="submit" disabled={isPending}>
-        Login
+      <div className="flex flex-col gap-3 w-[70%]">
+        <Input type="text" placeholder="Email" {...form.register("email")} />
+        <Input
+          type="password"
+          placeholder="Password"
+          {...form.register("password")}
+        />
+        {form.formState.errors.email && (
+          <p className="text-red-500">{form.formState.errors.email.message}</p>
+        )}
+      </div>
+      <Button
+        variant="basic"
+        type="submit"
+        className="w-[70%]"
+        disabled={isPending}
+      >
+        로그인하기
       </Button>
     </form>
   );

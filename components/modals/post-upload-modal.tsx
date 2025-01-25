@@ -49,6 +49,7 @@ const PostUploadModal = () => {
       imageUrl: "",
       isPrivate: false,
     },
+    mode: "onChange",
   });
 
   // 포스트 데이터 초기화
@@ -131,7 +132,7 @@ const PostUploadModal = () => {
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
       <div
-        className="w-[400px] h-full rounded-md dark:bg-gray-900 bg-white text-black dark:text-white overflow-y-auto"
+        className="w-full max-w-[430px] h-full dark:bg-gray-900 bg-white text-black dark:text-white overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center p-4 border-b dark:border-gray-700 border-gray-200 mb-5">
@@ -176,9 +177,7 @@ const PostUploadModal = () => {
             <Textarea
               {...form.register("content")}
               placeholder="Description"
-              className="line-clamp-6"
-              rows={6}
-              maxLength={500}
+              rows={5}
             />
             {form.formState.errors.content && (
               <p className="text-red-500 text-sm">

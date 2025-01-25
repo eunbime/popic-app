@@ -1,9 +1,11 @@
-import { getPostsByDate } from "@/api/posts";
-import useModal from "@/store/modal/modal-store";
-import useUser from "@/store/user/user-store.";
-import { TPostWithLikes } from "@/types";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import Image from "next/image";
+import { useQuery } from "@tanstack/react-query";
+
+import { TPostWithLikes } from "@/types";
+import { getPostsByDate } from "@/api/posts";
+import useUser from "@/store/user/user-store.";
+import useModal from "@/store/modal/modal-store";
 
 interface CalendarPostListProps {
   selectedDateForPost: Date | null;
@@ -13,11 +15,17 @@ const CalendarPostList = ({ selectedDateForPost }: CalendarPostListProps) => {
   const { user } = useUser();
   const { setType, setData, openModal } = useModal();
 
-  const { data: postsByDate } = useQuery<TPostWithLikes[]>({
+  const { data: postsByDate, refetch } = useQuery<TPostWithLikes[]>({
     queryKey: ["postsByDate", selectedDateForPost],
     queryFn: () => getPostsByDate(selectedDateForPost, user?.id || ""),
-    enabled: !!selectedDateForPost,
+    enabled: !!selectedDateForPost && !!user?.id,
   });
+
+  useEffect(() => {
+    if (selectedDateForPost) {
+      refetch();
+    }
+  }, [selectedDateForPost, refetch]);
 
   const handlePostClick = (post: TPostWithLikes) => {
     setType("post-view");

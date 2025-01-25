@@ -7,7 +7,7 @@ import {
   Heading,
   Button,
 } from "react-aria-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { CalendarDate } from "@internationalized/date";
 import { useQuery } from "@tanstack/react-query";
@@ -33,12 +33,14 @@ export default function CustomCalendar({
 
   const [selectedDate, setSelectedDate] = useState<CalendarDate | null>(null);
 
-  useEffect(() => {
-    const selectedDateForPost = selectedDate
-      ? new Date(selectedDate.year, selectedDate.month - 1, selectedDate.day)
+  const handleDateChange = (date: CalendarDate | null) => {
+    setSelectedDate(date);
+
+    const selectedDateForPost = date
+      ? new Date(date.year, date.month - 1, date.day)
       : null;
     setSelectedDateForPost(selectedDateForPost);
-  }, [selectedDate, setSelectedDateForPost]);
+  };
 
   // 날짜에 해당하는 이벤트 찾기
   const getEventForDate = (date: CalendarDate) => {
@@ -52,7 +54,7 @@ export default function CustomCalendar({
     <Calendar
       aria-label="날짜 선택"
       value={selectedDate}
-      onChange={setSelectedDate}
+      onChange={handleDateChange}
       className="w-full mt-5 p-4"
     >
       <header className="flex items-center justify-between px-4 py-2">
