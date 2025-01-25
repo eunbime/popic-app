@@ -13,6 +13,7 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { getDateGroupsByUserId } from "@/api/posts";
 import usePosts from "@/store/posts/posts-store";
 import CarouselCard from "@/components/gallery/carousel-card";
+import { Skeleton } from "../ui/skeleton";
 
 interface CarouselProps {
   userId: string;
@@ -23,22 +24,27 @@ const Carousel = ({ userId }: CarouselProps) => {
   const { selectedDate, setSelectedDate } = usePosts();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery({
-      queryKey: ["post-dates", userId],
-      queryFn: async ({ pageParam = new Date() }) => {
-        const result = await getDateGroupsByUserId(userId, pageParam);
-        return result.sort(
-          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-        );
-      },
-      getNextPageParam: (lastPage) => {
-        if (!lastPage || lastPage.length === 0) return undefined;
-        const oldestDate = lastPage[0].date; // 첫 번째 항목이 가장 오래된 날짜
-        return new Date(oldestDate);
-      },
-      initialPageParam: new Date(),
-    });
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingPosts,
+  } = useInfiniteQuery({
+    queryKey: ["post-dates", userId],
+    queryFn: async ({ pageParam = new Date() }) => {
+      const result = await getDateGroupsByUserId(userId, pageParam);
+      return result.sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      );
+    },
+    getNextPageParam: (lastPage) => {
+      if (!lastPage || lastPage.length === 0) return undefined;
+      const oldestDate = lastPage[0].date; // 첫 번째 항목이 가장 오래된 날짜
+      return new Date(oldestDate);
+    },
+    initialPageParam: new Date(),
+  });
 
   const allGroups = useMemo(() => {
     return (
@@ -85,6 +91,16 @@ const Carousel = ({ userId }: CarouselProps) => {
   const handleSlideClick = (date: Date) => {
     setSelectedDate(date);
   };
+
+  if (isLoadingPosts)
+    return (
+      <div className="w-[calc(100%-60px)] h-[80px] mx-auto flex items-center justify-center gap-2">
+        <Skeleton className="w-full h-full bg-gray-200 dark:bg-muted-foreground" />
+        <Skeleton className="w-full h-full bg-gray-200 dark:bg-muted-foreground" />
+        <Skeleton className="w-full h-full bg-gray-200 dark:bg-muted-foreground" />
+        <Skeleton className="w-full h-full bg-gray-200 dark:bg-muted-foreground" />
+      </div>
+    );
 
   return (
     <div className="relative w-full h-[80px] mx-auto">

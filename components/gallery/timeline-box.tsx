@@ -60,7 +60,7 @@ const TimelineBox = ({ post, userId }: TimelineBoxProps) => {
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-[200px] h-[200px] bg-gray-200 flex items-center justify-center">
+          <div className="w-[350px] h-[350px] bg-gray-200 flex items-center justify-center">
             <p className="text-gray-500">No image</p>
           </div>
         )}

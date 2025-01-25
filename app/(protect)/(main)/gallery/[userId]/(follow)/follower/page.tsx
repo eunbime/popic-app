@@ -15,9 +15,5 @@ export default function FollowerPage() {
     queryFn: () => getFollowerList(userId),
   });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  return <FollowList listData={followerList || []} />;
+  return <FollowList listData={followerList || []} isLoading={isLoading} />;
 }

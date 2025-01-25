@@ -1,9 +1,10 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import useUser from "@/store/user/user-store.";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+import { cn } from "@/lib/utils";
+import useUser from "@/store/user/user-store.";
 
 const TopNavBar = () => {
   const { user } = useUser();

@@ -5,6 +5,7 @@ import { useRef } from "react";
 import usePosts from "@/store/posts/posts-store";
 import { useInfinitePosts } from "@/hooks/use-infinite-posts";
 import TimelineBox from "@/components/gallery/timeline-box";
+import { Skeleton } from "../ui/skeleton";
 
 interface TimelineProps {
   userId: string;
@@ -21,8 +22,23 @@ const Timeline = ({ userId }: TimelineProps) => {
     selectedFilter: null,
   });
 
-  if (status === "pending") return <div>Loading...</div>;
-  if (status === "error") return <div>Error</div>;
+  if (status === "pending")
+    return (
+      <div className="w-full h-full flex flex-col pt-5">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div
+            key={index}
+            className="w-[350px] h-[430px] mx-auto mt-5 group relative cursor-pointer flex flex-col item-start gap-2"
+          >
+            <Skeleton className="h-7 w-[250px] bg-gray-200 dark:bg-muted-foreground" />
+            <Skeleton className="w-[350px] h-[350px] bg-gray-200 dark:bg-muted-foreground" />
+            <Skeleton className="h-4 w-[250px] bg-gray-200 dark:bg-muted-foreground" />
+          </div>
+        ))}
+      </div>
+    );
+
+  if (status === "error") return <div>오류가 발생했습니다.</div>;
 
   return (
     <div className="w-full h-full flex flex-col">
