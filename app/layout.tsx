@@ -1,10 +1,11 @@
+import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+
+import { auth } from "@/lib/auth";
 import ThemeProvider from "@/components/providers/ThemeProvider";
 import NavBar from "@/components/navigation/nav-bar";
 import Header from "@/components/header";
-import { auth } from "@/lib/auth";
 import ModalProvider from "@/components/providers/modal-provider";
 import { UserInitializer } from "@/components/providers/user-initializer";
 import QueryProvider from "@/components/providers/query-provider";
@@ -23,7 +24,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   manifest: "/manifest.json",
   title: "Popic",
-  description: "Popic is a photo sharing app",
+  description: "Popic은 사진 일기 공유 애플리케이션입니다.",
 };
 
 export default async function RootLayout({
@@ -37,7 +38,16 @@ export default async function RootLayout({
     <html lang="ko" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#000000" />
+        <meta
+          name="theme-color"
+          content="#ffffff"
+          media="(prefers-color-scheme: light)"
+        />
+        <meta
+          name="theme-color"
+          content="#000000"
+          media="(prefers-color-scheme: dark)"
+        />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />

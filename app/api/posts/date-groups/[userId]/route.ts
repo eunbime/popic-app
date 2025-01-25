@@ -45,8 +45,11 @@ export async function GET(
     const result = await Promise.all(
       limitedDates.map(async (dateStr) => {
         const date = new Date(dateStr);
+        date.setHours(0, 0, 0, 0);
+
         const nextDate = new Date(dateStr);
         nextDate.setDate(nextDate.getDate() + 1);
+        nextDate.setHours(0, 0, 0, 0);
 
         const [count, post] = await Promise.all([
           db.post.count({

@@ -1,11 +1,11 @@
 {
   "name": "Popic",
   "short_name": "Popic",
-  "description": "Popic is a photo sharing app",
+  "description": "Popic은 사진 일기 공유 애플리케이션입니다.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "theme_color": "#ffffff",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",

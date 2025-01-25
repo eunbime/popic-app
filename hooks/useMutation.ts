@@ -22,7 +22,7 @@ export const useCustomMutation = () => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts", null] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["post-dates"] });
     },
     onError: (error) => {
