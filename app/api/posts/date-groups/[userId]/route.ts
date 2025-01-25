@@ -17,14 +17,17 @@ export async function GET(
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    console.log({ beforeDate });
     // 먼저 날짜만 추출하여 고유한 날짜 목록 가져오기
     const uniqueDates = await db.post.findMany({
       where: {
         authorId: userId,
         date: {
-          lte: beforeDate
-            ? new Date(new Date(beforeDate).getTime() + 9 * 60 * 60 * 1000)
-            : new Date(new Date().getTime() + 9 * 60 * 60 * 1000),
+          ...(beforeDate
+            ? { lt: new Date(beforeDate) }
+            : {
+                lte: new Date(new Date().setHours(23, 59, 59, 999)),
+              }),
         },
         isPrivate: session.user.id === userId ? undefined : false,
       },

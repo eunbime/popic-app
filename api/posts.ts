@@ -40,7 +40,7 @@ export const getPostsByDate = async (
 
 export const getDateGroupsByUserId = async (
   userId: string,
-  beforeDate?: Date
+  beforeDate?: Date | undefined
 ): Promise<DateGroup[]> => {
   const { data } = await axios.get(`/api/posts/date-groups/${userId}`, {
     params: {

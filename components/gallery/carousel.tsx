@@ -32,7 +32,7 @@ const Carousel = ({ userId }: CarouselProps) => {
     isLoading: isLoadingPosts,
   } = useInfiniteQuery({
     queryKey: ["post-dates", userId],
-    queryFn: async ({ pageParam = new Date() }) => {
+    queryFn: async ({ pageParam }: { pageParam: Date | undefined }) => {
       const result = await getDateGroupsByUserId(userId, pageParam);
       return result.sort(
         (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -43,7 +43,7 @@ const Carousel = ({ userId }: CarouselProps) => {
       const oldestDate = lastPage[0].date; // 첫 번째 항목이 가장 오래된 날짜
       return new Date(oldestDate);
     },
-    initialPageParam: new Date(),
+    initialPageParam: undefined,
   });
 
   const allGroups = useMemo(() => {
