@@ -104,8 +104,8 @@ const ProfileForm = () => {
         <Textarea
           {...form.register("bio")}
           placeholder="Name"
-          className="h-[200px]"
           maxLength={500}
+          rows={5}
         />
       </div>
       <div className="flex flex-col gap-4 w-full p-4">

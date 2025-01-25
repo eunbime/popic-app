@@ -89,6 +89,7 @@ const Carousel = ({ userId }: CarouselProps) => {
   };
 
   const handleSlideClick = (date: Date) => {
+    console.log("!!", date);
     setSelectedDate(date);
   };
 

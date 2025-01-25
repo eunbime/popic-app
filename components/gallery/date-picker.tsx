@@ -19,6 +19,18 @@ interface DatePickerProps {
 }
 
 const DatePicker = ({ date, setDate }: DatePickerProps) => {
+  // 날짜 선택 핸들러 추가
+  const handleSelect = (selectedDate: Date | undefined) => {
+    if (selectedDate) {
+      // 선택된 날짜의 23:59:59.999로 설정
+      const endOfDay = new Date(selectedDate);
+      endOfDay.setHours(23, 59, 59, 0);
+      setDate(endOfDay);
+    } else {
+      setDate(undefined);
+    }
+  };
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -40,7 +52,7 @@ const DatePicker = ({ date, setDate }: DatePickerProps) => {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={handleSelect}
           disabled={(date) =>
             date > new Date() || date < new Date("1900-01-01")
           }

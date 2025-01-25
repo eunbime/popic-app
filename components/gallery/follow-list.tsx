@@ -5,9 +5,10 @@ import { Skeleton } from "../ui/skeleton";
 interface FollowListProps {
   listData: User[];
   isLoading: boolean;
+  listType: "following" | "follower";
 }
 
-const FollowList = ({ listData, isLoading }: FollowListProps) => {
+const FollowList = ({ listData, isLoading, listType }: FollowListProps) => {
   if (isLoading)
     return (
       <div className="w-full">
@@ -30,11 +31,19 @@ const FollowList = ({ listData, isLoading }: FollowListProps) => {
 
   return (
     <div className="w-full">
-      {listData?.map((user) => (
-        <div key={user.id} className="w-full divide-y-2">
-          <FollowProfileBox user={user} />
+      {listData?.length === 0 ? (
+        <div className="w-full flex items-center justify-center h-full pt-10">
+          <p className="text-gray-500">
+            {listType === "following" ? "팔로잉" : "팔로워"} 목록이 없습니다.
+          </p>
         </div>
-      ))}
+      ) : (
+        listData?.map((user) => (
+          <div key={user.id} className="w-full divide-y-2">
+            <FollowProfileBox user={user} />
+          </div>
+        ))
+      )}
     </div>
   );
 };

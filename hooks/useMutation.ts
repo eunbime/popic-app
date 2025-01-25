@@ -22,7 +22,7 @@ export const useCustomMutation = () => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts", null] });
       queryClient.invalidateQueries({ queryKey: ["post-dates"] });
     },
     onError: (error) => {
@@ -35,8 +35,9 @@ export const useCustomMutation = () => {
       await axios.delete(`/api/posts/${post.id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts", null] });
       queryClient.invalidateQueries({ queryKey: ["post-dates"] });
+      queryClient.invalidateQueries({ queryKey: ["posts-by-date"] });
     },
     onError: (error) => {
       console.log("[DELETE_POST_ERROR]", error);
@@ -59,6 +60,7 @@ export const useCustomMutation = () => {
         queryKey: ["posts"],
       });
       queryClient.invalidateQueries({ queryKey: ["post-dates"] });
+      queryClient.invalidateQueries({ queryKey: ["posts-by-date"] });
     },
     onError: (error) => {
       console.log("[POST_EDIT_ERROR]", error);

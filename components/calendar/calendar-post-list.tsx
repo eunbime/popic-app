@@ -22,7 +22,7 @@ const CalendarPostList = ({ selectedDateForPost }: CalendarPostListProps) => {
     : null;
 
   const { data: postsByDate, refetch } = useQuery<TPostWithLikes[]>({
-    queryKey: ["postsByDate", normalizedDate],
+    queryKey: ["posts-by-date", normalizedDate],
     queryFn: () => getPostsByDate(normalizedDate, user?.id || ""),
     enabled: !!normalizedDate && !!user?.id,
   });

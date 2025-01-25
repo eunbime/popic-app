@@ -22,7 +22,9 @@ export async function GET(
       where: {
         authorId: userId,
         date: {
-          lt: beforeDate ? new Date(beforeDate) : new Date(),
+          lte: beforeDate
+            ? new Date(new Date(beforeDate).getTime() + 9 * 60 * 60 * 1000)
+            : new Date(new Date().getTime() + 9 * 60 * 60 * 1000),
         },
         isPrivate: session.user.id === userId ? undefined : false,
       },
@@ -37,7 +39,10 @@ export async function GET(
     // 날짜만 비교하여 중복 제거
     const dateSet = [
       ...new Set(
-        uniqueDates.map(({ date }) => date.toISOString().split("T")[0])
+        uniqueDates.map(({ date }) => {
+          const koreanDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+          return koreanDate.toISOString().split("T")[0];
+        })
       ),
     ];
     const limitedDates = dateSet.slice(0, LIMIT);
@@ -45,19 +50,18 @@ export async function GET(
     const result = await Promise.all(
       limitedDates.map(async (dateStr) => {
         const date = new Date(dateStr);
-        date.setHours(0, 0, 0, 0);
-
-        const nextDate = new Date(dateStr);
-        nextDate.setDate(nextDate.getDate() + 1);
-        nextDate.setHours(0, 0, 0, 0);
+        const startDate = new Date(date);
+        startDate.setHours(0, 0, 0, 0); // 해당 날짜 00시 00분부터
+        const endDate = new Date(date);
+        endDate.setHours(23, 59, 59, 999); // 해당 날짜 23시 59분 59초 999밀리초까지
 
         const [count, post] = await Promise.all([
           db.post.count({
             where: {
               authorId: userId,
               date: {
-                gte: date,
-                lt: nextDate,
+                gte: startDate,
+                lt: endDate,
               },
               isPrivate: session.user.id === userId ? undefined : false,
             },
@@ -67,7 +71,7 @@ export async function GET(
               authorId: userId,
               date: {
                 gte: date,
-                lt: nextDate,
+                lt: endDate,
               },
               isPrivate: session.user.id === userId ? undefined : false,
             },

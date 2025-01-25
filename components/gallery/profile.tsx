@@ -70,7 +70,7 @@ const Profile = ({ userId }: ProfileProps) => {
               {userData?.name}
             </span>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              {userData?.bio || "(No bio)"}
+              {userData?.bio || "한줄 소개를 입력해주세요."}
             </p>
           </div>
         </div>
