@@ -24,7 +24,7 @@ const FollowProfileBox = ({ user }: FollowProfileBoxProps) => {
       {/* 프로필 이미지 */}
       <div className="relative min-w-[50px] min-h-[50px] rounded-full overflow-hidden">
         <Image
-          src={user.image as string}
+          src={user.image || "/images/default-profile.png"}
           alt={user.name as string}
           fill
           className="object-cover w-full h-full"

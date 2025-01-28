@@ -24,7 +24,7 @@ const FileUpload = ({ onChange, value, endpoint }: FileUploadProps) => {
     return (
       <div>
         <Image
-          src={imageUrl as string}
+          src={imageUrl || "/images/default-profile.png"}
           alt="Upload"
           fill
           className="object-cover"

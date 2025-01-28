@@ -11,12 +11,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "../ui/button";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUser } from "@/api/user";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import axios from "axios";
 import useModal from "@/store/modal/modal-store";
 
 const ProfileForm = () => {
-  const [isImageUploaded, setIsImageUploaded] = useState(false);
   const queryClient = useQueryClient();
 
   const { openModal, setType, setData } = useModal();
@@ -26,26 +25,27 @@ const ProfileForm = () => {
     queryFn: () => getUser(),
   });
 
-  const form = useForm<z.infer<typeof ProfileSchema>>({
-    resolver: zodResolver(ProfileSchema),
-    defaultValues: {
+  const initialValues = useMemo(
+    () => ({
       name: userData?.name || "",
       image: userData?.image || "",
       bio: userData?.bio || "",
-    },
+    }),
+    [userData?.name, userData?.image, userData?.bio]
+  );
+
+  const form = useForm<z.infer<typeof ProfileSchema>>({
+    resolver: zodResolver(ProfileSchema),
+    defaultValues: initialValues,
     mode: "onSubmit",
     reValidateMode: "onSubmit",
   });
 
   useEffect(() => {
     if (userData) {
-      form.reset({
-        name: userData.name || "",
-        image: userData.image || "",
-        bio: userData.bio || "",
-      });
+      form.reset(initialValues);
     }
-  }, [userData, form]);
+  }, [userData, form, initialValues]);
 
   const image = form.watch("image");
 
@@ -81,7 +81,6 @@ const ProfileForm = () => {
             value={image || null}
             onChange={(url) => {
               form.setValue("image", url || null);
-              setIsImageUploaded(!!url);
             }}
             endpoint="profileImage"
           />
@@ -117,7 +116,10 @@ const ProfileForm = () => {
       <div className="flex justify-center w-full p-4">
         <Button
           type="submit"
-          disabled={!form.formState.isDirty && !isImageUploaded}
+          disabled={
+            (!form.formState.isDirty && image === initialValues?.image) ||
+            !userData
+          }
         >
           저장하기
         </Button>

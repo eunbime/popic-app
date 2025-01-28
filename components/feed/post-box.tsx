@@ -32,15 +32,13 @@ const PostBox = ({ post }: PostBoxProps) => {
           className="w-[80px] h-[80px] rounded-full overflow-hidden bg-gray-200 cursor-pointer"
           onClick={handleAuthorClick}
         >
-          {post.author.image && (
-            <Image
-              src={post.author.image}
-              alt="post"
-              width={80}
-              height={80}
-              className="group-hover:opacity-70 transition-opacity duration-300"
-            />
-          )}
+          <Image
+            src={post.author.image || "/images/default-profile.png"}
+            alt="post"
+            width={80}
+            height={80}
+            className="group-hover:opacity-70 transition-opacity duration-300"
+          />
         </div>
         <p
           className="text-sm font-semibold text-gray-500 cursor-pointer group-hover:dark:text-white group-hover:text-black transition-colors duration-300"

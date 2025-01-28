@@ -45,7 +45,7 @@ export default async function RootLayout({
         />
         <meta
           name="theme-color"
-          content="#000000"
+          content="#111827"
           media="(prefers-color-scheme: dark)"
         />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
@@ -61,7 +61,7 @@ export default async function RootLayout({
           <UserInitializer user={session?.user} />
           <QueryProvider>
             <ModalProvider />
-            <div className="w-full h-full bg-white dark:bg-black text-black dark:text-white">
+            <div className="w-full h-full bg-white dark:bg-gray-900 text-black dark:text-white">
               {children}
             </div>
             <NavBar />
