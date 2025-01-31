@@ -9,22 +9,30 @@ export const LoginSchema = z.object({
   }),
 });
 
-export const RegisterSchema = z.object({
-  email: z.string().email({
-    message: "이메일 형식이 올바르지 않습니다.",
-  }),
-  password: z.string().min(6, {
-    message: "비밀번호는 최소 6자 이상이어야 합니다.",
-  }),
-  name: z
-    .string()
-    .min(1, {
-      message: "이름은 필수 입력 항목입니다.",
-    })
-    .max(20, {
-      message: "이름은 최대 20자까지 입력할 수 있습니다.",
+export const RegisterSchema = z
+  .object({
+    email: z.string().email({
+      message: "이메일 형식이 올바르지 않습니다.",
     }),
-});
+    password: z.string().min(6, {
+      message: "비밀번호는 최소 6자 이상이어야 합니다.",
+    }),
+    passwordConfirm: z.string().min(6, {
+      message: "비밀번호는 최소 6자 이상이어야 합니다.",
+    }),
+    name: z
+      .string()
+      .min(1, {
+        message: "이름은 필수 입력 항목입니다.",
+      })
+      .max(20, {
+        message: "이름은 최대 20자까지 입력할 수 있습니다.",
+      }),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: "비밀번호가 일치하지 않습니다.",
+    path: ["passwordConfirm"],
+  });
 
 export const PostUploadSchema = z.object({
   title: z

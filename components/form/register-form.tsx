@@ -10,6 +10,7 @@ import { RegisterSchema } from "@/schemas";
 import { register } from "@/actions/register";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { checkEmail } from "@/actions/check-email";
 
 const RegisterForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -21,6 +22,7 @@ const RegisterForm = () => {
     defaultValues: {
       email: "",
       password: "",
+      passwordConfirm: "",
       name: "",
     },
     mode: "onChange",
@@ -35,7 +37,7 @@ const RegisterForm = () => {
 
     if (step === 1) {
       const emailSchema = z.object({
-        email: RegisterSchema.shape.email,
+        email: z.string().email(),
       });
 
       const result = emailSchema.safeParse({ email: values.email });
@@ -43,19 +45,41 @@ const RegisterForm = () => {
         form.setError("email", { message: "이메일 형식이 올바르지 않습니다." });
         return;
       }
-      setStep(2);
+
+      startTransition(async () => {
+        try {
+          const existingUser = await checkEmail(values.email);
+          if (existingUser) {
+            form.setError("email", { message: "이미 사용중인 이메일입니다." });
+            return;
+          }
+          setStep(2);
+        } catch (error) {
+          form.setError("email", {
+            message: "이메일 확인 중 오류가 발생했습니다.",
+          });
+          console.error(error);
+        }
+      });
+
       return;
     }
 
     if (step === 2) {
-      const passwordSchema = z.object({
-        password: RegisterSchema.shape.password,
+      const passwordSchema = RegisterSchema._def.schema.pick({
+        password: true,
+        passwordConfirm: true,
       });
 
-      const result = passwordSchema.safeParse({ password: values.password });
+      const result = passwordSchema.safeParse({
+        password: values.password,
+        passwordConfirm: values.passwordConfirm,
+      });
+
       if (!result.success) {
-        form.setError("password", {
-          message: "비밀번호는 6자 이상이어야 합니다.",
+        const errors = result.error.errors[0];
+        form.setError(errors.path[0] as "password" | "passwordConfirm", {
+          message: errors.message,
         });
         return;
       }
@@ -93,7 +117,7 @@ const RegisterForm = () => {
           <Input
             {...form.register("email")}
             type="email"
-            placeholder="Email"
+            placeholder="이메일"
             className="w-[70%]"
           />
           {errors.email && (
@@ -108,12 +132,23 @@ const RegisterForm = () => {
           <Input
             {...form.register("password")}
             type="password"
-            placeholder="Password"
+            placeholder="비밀번호"
             className="w-[70%]"
           />
           {errors.password && (
             <span className="text-red-500 text-sm">
               {errors.password.message}
+            </span>
+          )}
+          <Input
+            {...form.register("passwordConfirm")}
+            type="password"
+            placeholder="비밀번호 확인"
+            className="w-[70%]"
+          />
+          {errors.passwordConfirm && (
+            <span className="text-red-500 text-sm">
+              {errors.passwordConfirm.message}
             </span>
           )}
         </>
@@ -125,7 +160,7 @@ const RegisterForm = () => {
           <Input
             {...form.register("name")}
             type="text"
-            placeholder="Name"
+            placeholder="이름"
             className="w-[70%]"
           />
           {errors.name && (
