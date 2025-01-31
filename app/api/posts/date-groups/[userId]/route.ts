@@ -73,7 +73,7 @@ export async function GET(
             where: {
               authorId: userId,
               date: {
-                gte: date,
+                gte: startDate,
                 lt: endDate,
               },
               isPrivate: session.user.id === userId ? undefined : false,
