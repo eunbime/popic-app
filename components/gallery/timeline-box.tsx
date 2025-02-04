@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import { PencilIcon, Trash2Icon } from "lucide-react";
 
-import { TPostWithLikes } from "@/types";
+import { TPostsWithAuthorAndLikes } from "@/types";
 import useModal from "@/store/modal/modal-store";
 import { formatDateForTimeline } from "@/lib/formatDate";
 import { useCustomMutation } from "@/hooks/useMutation";
@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import HeartButton from "@/components/heart-button";
 
 interface TimelineBoxProps {
-  post: TPostWithLikes;
+  post: TPostsWithAuthorAndLikes;
   userId: string;
 }
 

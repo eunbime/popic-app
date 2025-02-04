@@ -1,10 +1,10 @@
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 import { TPostsWithAuthorAndLikes } from "@/types";
 import useModal from "@/store/modal/modal-store";
 import useUser from "@/store/user/user-store.";
 import HeartButton from "../heart-button";
+import UserAvatar from "../common/user-avatar";
 
 interface PostBoxProps {
   post: TPostsWithAuthorAndLikes;
@@ -12,7 +12,6 @@ interface PostBoxProps {
 
 const PostBox = ({ post }: PostBoxProps) => {
   const { user } = useUser();
-  const router = useRouter();
   const { openModal, setType, setData } = useModal();
 
   const handlePostClick = () => {
@@ -21,29 +20,11 @@ const PostBox = ({ post }: PostBoxProps) => {
     openModal();
   };
 
-  const handleAuthorClick = () => {
-    router.push(`/gallery/${post.author.id}`);
-  };
-
   return (
     <div className="w-full h-full flex gap-10">
       <div className="flex flex-col gap-2 items-center group h-fit">
-        <div
-          className="w-[80px] h-[80px] rounded-full overflow-hidden bg-gray-200 cursor-pointer"
-          onClick={handleAuthorClick}
-        >
-          <Image
-            src={post.author.image || "/images/default-profile.png"}
-            alt="post"
-            width={80}
-            height={80}
-            className="group-hover:opacity-70 transition-opacity duration-300"
-          />
-        </div>
-        <p
-          className="text-sm font-semibold text-gray-500 cursor-pointer group-hover:dark:text-white group-hover:text-black transition-colors duration-300"
-          onClick={handleAuthorClick}
-        >
+        <UserAvatar image={post.author.image} author={post.author} />
+        <p className="text-sm font-semibold text-gray-500 cursor-pointer group-hover:dark:text-white group-hover:text-black transition-colors duration-300">
           {post.author.name}
         </p>
       </div>

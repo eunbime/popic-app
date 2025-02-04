@@ -12,3 +12,9 @@ export type TPostsWithAuthorAndLikes = Post & {
 export type TPostWithLikes = Post & {
   likes: Like[];
 };
+
+export interface TAuthor {
+  id: string;
+  name: string;
+  image: string;
+}
