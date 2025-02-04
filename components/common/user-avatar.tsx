@@ -4,15 +4,22 @@ import Image from "next/image";
 import { TAuthor } from "@/types";
 import useModal from "@/store/modal/modal-store";
 
-const UserAvatar = ({ image, author }: { image: string; author: TAuthor }) => {
+interface UserAvatarProps {
+  image: string;
+  author?: TAuthor;
+}
+
+const UserAvatar = ({ image, author }: UserAvatarProps) => {
   const router = useRouter();
   const { isOpen, closeModal } = useModal();
 
   const handleAuthorClick = () => {
-    if (isOpen) {
-      closeModal();
+    if (author) {
+      if (isOpen) {
+        closeModal();
+      }
+      router.push(`/gallery/${author.id}`);
     }
-    router.push(`/gallery/${author.id}`);
   };
 
   return (

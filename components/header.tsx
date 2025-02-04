@@ -3,7 +3,7 @@
 import useUser from "@/store/user/user-store.";
 import { usePathname, useRouter } from "next/navigation";
 import { BiArrowBack } from "react-icons/bi";
-import { IoSettings } from "react-icons/io5";
+import { IoSearch, IoSettings } from "react-icons/io5";
 
 const Header = () => {
   const { user } = useUser();
@@ -18,12 +18,15 @@ const Header = () => {
   const isLike = pathname === "/social/like";
   const isSettings = pathname === "/settings";
   const isFollow = pathname.includes("/follow");
+  const isSearch = pathname.includes("/search");
 
   const handleClick = (path: string) => {
     if (isHome || isFeed || isLike || isSettings) {
       router.push(path);
     } else if (isFollow) {
       router.push(`/gallery/${user?.id}`);
+    } else if (isSearch) {
+      router.push("/social/feed?filter=all");
     } else {
       router.back();
     }
@@ -54,7 +57,13 @@ const Header = () => {
             )}
           </p>
         </div>
-        <div className="flex justify-center items-center cursor-pointer">
+        <div className="flex justify-center items-center gap-5 cursor-pointer">
+          {isFeed && (
+            <IoSearch
+              size={30}
+              onClick={() => handleClick("/search?filter=post")}
+            />
+          )}
           <IoSettings size={30} onClick={() => handleClick("/settings")} />
         </div>
       </div>

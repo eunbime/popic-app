@@ -35,3 +35,20 @@ export const getFollowerList = async (userId: string): Promise<User[]> => {
   const { data } = await axios.get(`/api/user/${userId}/follower-list`);
   return data;
 };
+
+export const getSearchUserList = async (
+  keyword: string,
+  limit: number,
+  offset: number,
+  sort: string
+): Promise<User[]> => {
+  const { data } = await axios.get(`/api/user/search`, {
+    params: {
+      keyword,
+      limit,
+      offset,
+      sort,
+    },
+  });
+  return data;
+};
