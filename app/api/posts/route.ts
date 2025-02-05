@@ -22,14 +22,7 @@ export async function POST(req: NextRequest) {
   const data = await req.json();
 
   const post = await db.post.create({
-    data: {
-      title: data.title,
-      content: data.content,
-      date: data.date,
-      isPrivate: data.isPrivate,
-      imageUrl: data.imageUrl,
-      authorId: data.authorId,
-    },
+    data: data,
   });
 
   if (!post) {

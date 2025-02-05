@@ -59,6 +59,18 @@ export const PostUploadSchema = z.object({
     .min(1, {
       message: "이미지를 업로드해주세요.",
     }),
+  tags: z
+    .array(
+      z
+        .string()
+        .min(1, { message: "태그는 최소 1자 이상이어야 합니다." })
+        .max(10, { message: "태그는 10자를 초과할 수 없습니다." })
+        .regex(/^[가-힣a-zA-Z0-9]+$/, {
+          message: "태그는 한글, 영문, 숫자만 가능합니다.",
+        })
+    )
+    .max(10, { message: "태그는 최대 10개까지만 추가할 수 있습니다." })
+    .optional(),
   isPrivate: z.boolean(),
   id: z.string().optional(),
 });

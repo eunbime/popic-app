@@ -107,9 +107,19 @@ const PostUploadModal = () => {
             <h2 className="text-xl font-bold w-full text-center break-all line-clamp-1 dark:text-white text-black ">
               {postData?.post?.title}
             </h2>
-            <p className="text-sm w-full text-center text-gray-500 break-all pb-10">
+            <p className="text-sm w-full text-center text-gray-500 break-all pb-5">
               {postData?.post?.content}
             </p>
+            <div className="flex flex-wrap gap-2 pb-5 w-full">
+              {postData?.post?.tags?.map((tag) => (
+                <span
+                  key={tag}
+                  className="text-xs text-gray-500 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-md"
+                >
+                  #{tag}
+                </span>
+              ))}
+            </div>
           </article>
         </section>
       </div>

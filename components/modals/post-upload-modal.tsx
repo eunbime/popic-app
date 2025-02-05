@@ -17,6 +17,7 @@ import PrivateSwitch from "@/components/gallery/private-switch";
 import FileUpload from "@/components/file-upload";
 import { useQueryClient } from "@tanstack/react-query";
 import useUser from "@/store/user/user-store.";
+import TagsForm from "../form/tags-form";
 
 const PostUploadModal = () => {
   const {
@@ -48,6 +49,7 @@ const PostUploadModal = () => {
       date: new Date(),
       imageUrl: "",
       isPrivate: false,
+      tags: [],
     },
     mode: "onChange",
   });
@@ -65,6 +67,7 @@ const PostUploadModal = () => {
             date: new Date(postData.post.date),
             imageUrl: postData.post.imageUrl || "",
             isPrivate: postData.post.isPrivate,
+            tags: postData.post.tags,
           });
         }
       } else {
@@ -75,6 +78,7 @@ const PostUploadModal = () => {
           date: new Date(),
           imageUrl: "",
           isPrivate: false,
+          tags: [],
         });
       }
     }
@@ -197,6 +201,16 @@ const PostUploadModal = () => {
                 }
               />
             </div>
+            {/* 태그 입력 */}
+            <TagsForm
+              tags={form.watch("tags")}
+              onChange={(tags) => form.setValue("tags", tags)}
+            />
+            {form.formState.errors.tags && (
+              <p className="text-red-500 text-sm">
+                {form.formState.errors.tags.message}
+              </p>
+            )}
           </div>
           <Button
             type="submit"

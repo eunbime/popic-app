@@ -37,6 +37,7 @@ export async function PUT(
         date: new Date(values.date),
         imageUrl: values.imageUrl,
         isPrivate: values.isPrivate,
+        tags: values.tags,
       },
     });
 
