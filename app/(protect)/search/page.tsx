@@ -10,6 +10,7 @@ import { useState } from "react";
 export default function SearchPage() {
   const [search, setSearch] = useState("");
   const [keyword, setKeyword] = useState("");
+  const [order, setOrder] = useState("desc");
   const searchParams = useSearchParams();
 
   return (
@@ -21,14 +22,14 @@ export default function SearchPage() {
           search={search}
           setKeyword={setKeyword}
         />
-        <SearchFilter />
+        <SearchFilter setOrder={setOrder} order={order} />
       </section>
       {/* 검색 결과 */}
       <section className="flex justify-center items-center w-full">
         {searchParams.get("filter") === "user" ? (
-          <SearchUserList keyword={keyword} />
+          <SearchUserList keyword={keyword} order={order} />
         ) : searchParams.get("filter") === "post" ? (
-          <SearchPostList keyword={keyword} />
+          <SearchPostList keyword={keyword} order={order} />
         ) : null}
       </section>
     </div>

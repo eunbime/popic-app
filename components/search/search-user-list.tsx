@@ -8,14 +8,15 @@ import { useRouter } from "next/navigation";
 
 interface SearchUserListProps {
   keyword: string;
+  order: string;
 }
 
-const SearchUserList = ({ keyword }: SearchUserListProps) => {
+const SearchUserList = ({ keyword, order }: SearchUserListProps) => {
   const router = useRouter();
 
   const { data } = useInfiniteQuery({
-    queryKey: ["search-user-list", keyword],
-    queryFn: () => getSearchUserList(keyword, 10, 0, "desc"),
+    queryKey: ["search-user-list", keyword, order],
+    queryFn: () => getSearchUserList(keyword, 10, 0, order),
     getNextPageParam: (lastPage, pages) => {
       return lastPage.length === 10 ? pages.length * 10 : undefined;
     },

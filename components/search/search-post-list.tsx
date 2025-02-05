@@ -6,12 +6,13 @@ import PostBox from "../feed/post-box";
 
 interface SearchPostListProps {
   keyword: string;
+  order: string;
 }
 
-const SearchPostList = ({ keyword }: SearchPostListProps) => {
+const SearchPostList = ({ keyword, order }: SearchPostListProps) => {
   const { data } = useInfiniteQuery({
-    queryKey: ["search-post-list", keyword],
-    queryFn: () => getSearchPostList(keyword, 10, 0, "desc"),
+    queryKey: ["search-post-list", keyword, order],
+    queryFn: () => getSearchPostList(keyword, 10, 0, order),
     getNextPageParam: (lastPage, pages) => {
       return lastPage.length === 10 ? pages.length * 10 : undefined;
     },

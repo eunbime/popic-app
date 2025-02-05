@@ -81,7 +81,7 @@ export const getSearchPostList = async (
   keyword: string,
   limit: number,
   skip: number,
-  order: "asc" | "desc"
+  order: string
 ): Promise<TPostsWithAuthorAndLikes[]> => {
   const { data } = await axios.get("/api/posts/search", {
     params: { keyword, limit, skip, order },

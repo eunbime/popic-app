@@ -44,7 +44,10 @@ const TagsForm = ({ tags = [], onChange }: TagsFormProps) => {
       />
       <div className="flex flex-wrap gap-2">
         {tags?.map((tag) => (
-          <span key={tag} className="bg-gray-100 px-2 py-1 rounded">
+          <span
+            key={tag}
+            className="text-gray-500 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md text-xs"
+          >
             #{tag}
           </span>
         ))}

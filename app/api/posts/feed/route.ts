@@ -17,9 +17,6 @@ export const GET = async (request: Request) => {
 
     const posts = await db.post.findMany({
       where: {
-        NOT: {
-          authorId: session.user.id,
-        },
         isPrivate: false,
         ...(filter === "following" && {
           author: {

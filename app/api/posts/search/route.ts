@@ -9,9 +9,23 @@ export const GET = async (req: NextRequest) => {
 
   const posts = await db.post.findMany({
     where: {
-      title: {
-        contains: keyword || "",
-      },
+      OR: [
+        {
+          title: {
+            contains: keyword || "",
+          },
+        },
+        {
+          content: {
+            contains: keyword || "",
+          },
+        },
+        {
+          tags: {
+            has: keyword || "",
+          },
+        },
+      ],
       isPrivate: false,
     },
     take: Number(limit),
