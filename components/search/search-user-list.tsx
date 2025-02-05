@@ -13,16 +13,15 @@ interface SearchUserListProps {
 const SearchUserList = ({ keyword }: SearchUserListProps) => {
   const router = useRouter();
 
-  const { data, isLoading, isError, fetchNextPage, hasNextPage } =
-    useInfiniteQuery({
-      queryKey: ["search-user-list", keyword],
-      queryFn: () => getSearchUserList(keyword, 10, 0, "desc"),
-      getNextPageParam: (lastPage, pages) => {
-        return lastPage.length === 10 ? pages.length * 10 : undefined;
-      },
-      initialPageParam: 0,
-      enabled: !!keyword,
-    });
+  const { data } = useInfiniteQuery({
+    queryKey: ["search-user-list", keyword],
+    queryFn: () => getSearchUserList(keyword, 10, 0, "desc"),
+    getNextPageParam: (lastPage, pages) => {
+      return lastPage.length === 10 ? pages.length * 10 : undefined;
+    },
+    initialPageParam: 0,
+    enabled: !!keyword,
+  });
 
   const handleUserClick = (userId: string) => {
     router.push(`/gallery/${userId}`);

@@ -76,3 +76,15 @@ export const getLikePosts = async (
   });
   return data;
 };
+
+export const getSearchPostList = async (
+  keyword: string,
+  limit: number,
+  skip: number,
+  order: "asc" | "desc"
+): Promise<TPostsWithAuthorAndLikes[]> => {
+  const { data } = await axios.get("/api/posts/search", {
+    params: { keyword, limit, skip, order },
+  });
+  return data;
+};

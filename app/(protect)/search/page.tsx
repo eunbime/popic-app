@@ -13,9 +13,9 @@ export default function SearchPage() {
   const searchParams = useSearchParams();
 
   return (
-    <div className="w-full h-full flex flex-col gap-5 pt-5">
+    <div className="w-full h-full flex flex-col gap-5 pt-5 overflow-y-auto">
       {/* 검색 폼*/}
-      <section className="flex flex-col gap-5 w-[80%] mx-auto">
+      <section className="flex flex-col gap-5 w-[80%] mx-auto ">
         <SearchForm
           setSearch={setSearch}
           search={search}
