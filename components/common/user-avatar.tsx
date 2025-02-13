@@ -3,13 +3,15 @@ import Image from "next/image";
 
 import { TAuthor } from "@/types";
 import useModal from "@/store/modal/modal-store";
+import { cn } from "@/lib/utils";
 
 interface UserAvatarProps {
   image: string;
   author?: TAuthor;
+  size?: "sm" | "md" | "lg";
 }
 
-const UserAvatar = ({ image, author }: UserAvatarProps) => {
+const UserAvatar = ({ image, author, size = "md" }: UserAvatarProps) => {
   const router = useRouter();
   const { isOpen, closeModal } = useModal();
 
@@ -24,7 +26,12 @@ const UserAvatar = ({ image, author }: UserAvatarProps) => {
 
   return (
     <div
-      className="relative w-10 h-10 rounded-full overflow-hidden mr-2 cursor-pointer"
+      className={cn(
+        "relative w-10 h-10 rounded-full overflow-hidden mr-2 cursor-pointer",
+        size === "sm" && "w-8 h-8",
+        size === "md" && "w-10 h-10",
+        size === "lg" && "w-20 h-20"
+      )}
       onClick={handleAuthorClick}
     >
       {image && (

@@ -1,18 +1,24 @@
-"use client";
+import { auth } from "@/lib/auth";
+import CalendarComponent from "../_components/CalendarComponent";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { getPostsByUserId } from "@/api/posts";
 
-import CustomCalendar from "@/components/calendar/calendar";
-import CalendarPostList from "@/components/calendar/calendar-post-list";
-import { useState } from "react";
+export default async function CalendarPage() {
+  const session = await auth();
+  const queryClient = new QueryClient();
 
-export default function CalendarPage() {
-  const [selectedDateForPost, setSelectedDateForPost] = useState<Date | null>(
-    null
-  );
+  await queryClient.prefetchQuery({
+    queryKey: ["posts", session?.user?.id],
+    queryFn: () => getPostsByUserId(session?.user?.id),
+  });
 
   return (
-    <div className="w-full h-full">
-      <CustomCalendar setSelectedDateForPost={setSelectedDateForPost} />
-      <CalendarPostList selectedDateForPost={selectedDateForPost} />
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <CalendarComponent />
+    </HydrationBoundary>
   );
 }

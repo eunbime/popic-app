@@ -19,7 +19,7 @@ const Profile = ({ userId }: ProfileProps) => {
   const router = useRouter();
 
   const { data: userData, isLoading } = useQuery({
-    queryKey: ["user"],
+    queryKey: ["user", userId],
     queryFn: () => getUserById(userId),
   });
 

@@ -7,7 +7,19 @@ export const getUser = async (): Promise<User> => {
 };
 
 export const getUserById = async (userId: string): Promise<User> => {
-  const res = await axios.get(`/api/user/${userId}`);
+  const isServer = typeof window === "undefined";
+
+  const baseUrl = isServer
+    ? `${process.env.NEXT_PUBLIC_API_URL}/api/user/${userId}`
+    : `/api/user/${userId}`;
+
+  const res = await axios.get(baseUrl, {
+    ...(isServer && {
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    }),
+  });
   return res.data.user;
 };
 

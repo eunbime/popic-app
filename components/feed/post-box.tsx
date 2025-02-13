@@ -23,7 +23,7 @@ const PostBox = ({ post }: PostBoxProps) => {
   return (
     <div className="w-full h-full flex gap-10">
       <div className="flex flex-col gap-2 items-center group h-fit">
-        <UserAvatar image={post.author.image} author={post.author} />
+        <UserAvatar image={post.author.image} author={post.author} size="lg" />
         <p className="text-sm font-semibold text-gray-500 cursor-pointer group-hover:dark:text-white group-hover:text-black transition-colors duration-300">
           {post.author.name}
         </p>

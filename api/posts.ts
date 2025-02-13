@@ -15,7 +15,19 @@ export const getPosts = async (): Promise<Post[]> => {
 };
 
 export const getPostsByUserId = async (userId?: string): Promise<Post[]> => {
-  const { data } = await axios.get(`/api/posts/by-user/${userId}`);
+  const isServer = typeof window === "undefined";
+
+  const baseUrl = isServer
+    ? `${process.env.NEXT_PUBLIC_API_URL}/api/posts/by-user/${userId}`
+    : `/api/posts/by-user/${userId}`;
+
+  const { data } = await axios.get(baseUrl, {
+    ...(isServer && {
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    }),
+  });
   return data;
 };
 
@@ -26,14 +38,24 @@ export const getPostsByDate = async (
   limit: number = 5
 ): Promise<TPostsWithAuthorAndLikes[]> => {
   const skip = (page - 1) * limit;
+  const isServer = typeof window === "undefined";
 
-  const { data } = await axios.get("/api/posts/by-date", {
+  const baseUrl = isServer
+    ? `${process.env.NEXT_PUBLIC_API_URL}/api/posts/by-date`
+    : "/api/posts/by-date";
+
+  const { data } = await axios.get(baseUrl, {
     params: {
       date: date,
       userId: userId,
       skip,
       limit,
     },
+    ...(isServer && {
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    }),
   });
   return data;
 };
@@ -69,10 +91,21 @@ export const getFeedPosts = async (
 export const getLikePosts = async (
   filter: string | null
 ): Promise<TPostsWithAuthorAndLikes[]> => {
-  const { data } = await axios.get("/api/posts/like", {
+  const isServer = typeof window === "undefined";
+
+  const baseUrl = isServer
+    ? `${process.env.NEXT_PUBLIC_API_URL}/api/posts/like`
+    : "/api/posts/like";
+
+  const { data } = await axios.get(baseUrl, {
     params: {
       filter,
     },
+    ...(isServer && {
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    }),
   });
   return data;
 };
