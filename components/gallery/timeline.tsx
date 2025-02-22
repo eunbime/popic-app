@@ -24,7 +24,7 @@ const Timeline = ({ userId }: TimelineProps) => {
 
   if (status === "pending")
     return (
-      <div className="w-full h-full flex flex-col pt-5">
+      <div className="w-full h-full flex flex-col">
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
@@ -42,13 +42,13 @@ const Timeline = ({ userId }: TimelineProps) => {
 
   return (
     <div className="w-full h-full flex flex-col">
-      <div className="w-full h-full flex justify-center items-center pt-5">
-        {posts?.pages?.[0].length === 0 && (
-          <div className="font-bold text-lg text-gray-600 pt-20">
+      {posts?.pages?.[0].length === 0 && (
+        <div className="w-full h-full flex items-center justify-center">
+          <p className="font-bold text-lg text-gray-600 pt-20">
             오늘의 포스트가 없습니다.
-          </div>
-        )}
-      </div>
+          </p>
+        </div>
+      )}
       {posts?.pages.map((group) =>
         group.map((post) => (
           <TimelineBox key={post.id} post={post} userId={userId} />

@@ -29,15 +29,13 @@ const FloatingAddButton = () => {
   }
 
   return (
-    <div className="fixed bottom-[90px] w-full flex justify-center">
-      <div className="relative w-full max-w-[590px]">
-        <button
-          onClick={handleOpenModal}
-          className="fixed flex items-center justify-center z-20 bottom-[90px] right-[20px] sm:right-[calc(50%-200px)] w-[50px] h-[50px] rounded-full dark:bg-gray-300 bg-gray-300 shadow-sm shadow-gray-500 dark:shadow-gray-800 hover:opacity-80 transition-all duration-300"
-        >
-          <Plus />
-        </button>
-      </div>
+    <div className="z-20 fixed bottom-[90px] md:bottom-[50px] right-[20px]">
+      <button
+        onClick={handleOpenModal}
+        className="flex items-center justify-center w-[50px] h-[50px] rounded-full bg-main-blue shadow-sm shadow-gray-500 dark:shadow-gray-800 hover:opacity-80 transition-all duration-300"
+      >
+        <Plus />
+      </button>
     </div>
   );
 };
