@@ -6,7 +6,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="w-full h-full flex items-center justify-center">
+    <div className="w-full max-w-xl mx-auto h-full min-h-screen flex items-center justify-center">
       <BackButton />
       {children}
     </div>

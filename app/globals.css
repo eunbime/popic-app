@@ -6,14 +6,15 @@ html,
 body,
 :root {
   height: 100%;
-  background-color: #f5f5f5;
+  background-color: var(--background);
 }
 
-body {
-  max-width: 430px; /* iPhone 14 Pro Max 기준 */
-  margin: 0 auto; /* 중앙 정렬 */
-  position: relative;
-}
+/* body { */
+/* max-width: 430px; iPhone 14 Pro Max 기준 */
+/* max-width: 100%; */
+/* margin: 0 auto; 중앙 정렬 */
+/* position: relative; */
+/* } */
 
 body {
   -ms-overflow-style: none; /* IE and Edge */
@@ -52,7 +53,7 @@ body::-webkit-scrollbar {
     --radius: 0.5rem;
   }
   .dark {
-    --background: 0 0% 3.9%;
+    --background: #111827;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;

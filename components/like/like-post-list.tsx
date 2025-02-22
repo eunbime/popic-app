@@ -17,7 +17,7 @@ const LikePostList = () => {
 
   if (isLoading)
     return (
-      <div className="grid grid-cols-3 gap-5 p-7">
+      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 p-7">
         {Array.from({ length: 12 }).map((_, index) => (
           <Skeleton
             key={index}
@@ -28,7 +28,7 @@ const LikePostList = () => {
     );
 
   return (
-    <div className="grid grid-cols-3 gap-5 p-7">
+    <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 p-7">
       {posts?.map((post) => (
         <LikePostBox key={post.id} post={post} />
       ))}
