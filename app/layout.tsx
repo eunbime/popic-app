@@ -62,7 +62,7 @@ export default async function RootLayout({
           <UserInitializer user={session?.user} />
           <QueryProvider>
             <ModalProvider />
-            <div className="w-full h-full bg-white dark:bg-gray-900 text-black dark:text-white">
+            <div className="w-full h-full bg-white dark:bg-dark-gray text-black dark:text-white">
               {children}
             </div>
             <NavBar />

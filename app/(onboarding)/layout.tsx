@@ -3,7 +3,5 @@ export default function OnboardingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="w-full h-full bg-white dark:bg-gray-900">{children}</div>
-  );
+  return <div className="max-w-6xl mx-auto min-h-screen">{children}</div>;
 }

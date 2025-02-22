@@ -18,7 +18,7 @@ const SocialNavBar = () => {
   const filter = query.get("filter");
 
   return (
-    <nav className="w-full h-[30px] flex justify-center items-center gap-20 mt-3">
+    <nav className="w-full h-[30px] hidden md:flex justify-center items-center gap-20 mt-3">
       {NAV_ITEMS.map((item) => (
         <Link
           key={item.href}

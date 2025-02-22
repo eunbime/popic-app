@@ -12,7 +12,10 @@ export default function LoginPage() {
       <LoginForm />
       <p className="text-sm text-gray-500 mt-5">
         아직 회원이 아니신가요?{" "}
-        <Link href="/auth/register" className="text-gray-300 font-semibold">
+        <Link
+          href="/auth/register"
+          className="text-gray-600 dark:text-gray-300 font-semibold"
+        >
           회원가입
         </Link>
       </p>

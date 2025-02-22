@@ -25,7 +25,7 @@ const TopNavBar = () => {
   }
 
   return (
-    <div className="w-full h-[30px] flex justify-center items-center gap-20 mt-3">
+    <div className="w-full h-[30px] hidden md:flex justify-center items-center gap-20 mt-3">
       <Link
         href={`/gallery/${user?.id}`}
         className={cn(

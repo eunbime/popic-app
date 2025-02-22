@@ -37,8 +37,8 @@ const Header = () => {
   }
 
   return (
-    <div className="fixed z-10 top-0 left-0 w-full h-[50px]">
-      <div className="max-w-[430px] mx-auto h-full bg-white dark:bg-gray-900 text-black dark:text-white flex justify-between items-center px-5 border-b border-gray-200 dark:border-gray-800">
+    <div className="fixed md:hidden z-10 top-0 left-0 w-full h-[50px] border-b border-gray-200 bg-white dark:bg-dark-gray text-black dark:text-white dark:border-gray-800 px-5 ">
+      <div className="max-w-6xl mx-auto h-full  flex justify-between items-center">
         <div className="flex justify-center items-center">
           <p
             onClick={() => handleClick(pathname)}
