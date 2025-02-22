@@ -22,7 +22,7 @@ export default async function GalleryPage({ params }: { params: PageParams }) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="!flex !flex-col md:!flex-row w-full h-full">
+      <div className="!flex !flex-col md:!flex-row w-full h-full gap-0 md:gap-8 p-0 md:px-10">
         <div className="flex flex-col w-full md:w-1/2 min-h-full">
           <Profile userId={userId} />
           <CarouselBox userId={userId} />

@@ -1,12 +1,13 @@
-import { getPostsByDate } from "@/api/posts";
-import PostList from "@/components/feed/post-list";
-import { auth } from "@/lib/auth";
-import { TPostsWithAuthorAndLikes } from "@/types";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+
+import { TPostsWithAuthorAndLikes } from "@/types";
+import { auth } from "@/lib/auth";
+import { getPostsByDate } from "@/api/posts";
+import PostList from "@/components/feed/post-list";
 
 export default async function Feed() {
   const session = await auth();
@@ -22,7 +23,7 @@ export default async function Feed() {
   });
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="w-full h-full">
+      <div className="w-full h-full md:px-10">
         <PostList />
       </div>
     </HydrationBoundary>

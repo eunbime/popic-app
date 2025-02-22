@@ -39,26 +39,42 @@ const CalendarPostList = ({ selectedDateForPost }: CalendarPostListProps) => {
     openModal();
   };
 
-  console.log(normalizedDate);
+  if (!selectedDateForPost) {
+    return (
+      <p className="text-center text-gray-400 row-span-full col-span-full p-10">
+        날짜를 선택해주세요.
+      </p>
+    );
+  }
 
   return (
-    <div className="grid  grid-cols-4 gap-4 p-4">
-      {postsByDate?.map((post) => (
-        <div key={post.id}>
-          <div
-            className="w-[80px] h-[80px] rounded-md overflow-hidden cursor-pointer"
-            onClick={() => handlePostClick(post)}
-          >
-            <Image
-              src={post.imageUrl || ""}
-              alt={post.title}
-              width={80}
-              height={80}
-              className="object-cover w-full h-full"
-            />
+    <div className="w-full grid  grid-cols-4 gap-4 p-4 md:bg-gray-100 md:dark:bg-gray-800 md:mt-10 md:rounded-lg">
+      {postsByDate?.length === 0 ? (
+        <p className="text-center text-gray-400 row-span-full col-span-full p-10">
+          포스트가 없습니다.
+        </p>
+      ) : !selectedDateForPost ? (
+        <p className="text-center text-gray-400 row-span-full col-span-full p-10">
+          날짜를 선택해주세요.
+        </p>
+      ) : (
+        postsByDate?.map((post) => (
+          <div key={post.id}>
+            <div
+              className="w-[80px] h-[80px] rounded-md overflow-hidden cursor-pointer"
+              onClick={() => handlePostClick(post)}
+            >
+              <Image
+                src={post.imageUrl || ""}
+                alt={post.title}
+                width={80}
+                height={80}
+                className="object-cover w-full h-full"
+              />
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 };

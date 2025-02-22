@@ -10,7 +10,7 @@ export default function CalendarComponent() {
   );
 
   return (
-    <div className="w-full h-full max-w-[430px] mx-auto">
+    <div className="!flex !flex-col md:!flex-row w-full h-full">
       <CustomCalendar setSelectedDateForPost={setSelectedDateForPost} />
       <CalendarPostList selectedDateForPost={selectedDateForPost} />
     </div>
