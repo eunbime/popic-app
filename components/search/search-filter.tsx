@@ -1,8 +1,9 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
+import { cn } from "@/lib/utils";
 
 interface SearchFilterProps {
   setOrder: (order: string) => void;

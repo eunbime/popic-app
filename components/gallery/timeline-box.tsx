@@ -5,9 +5,9 @@ import { PencilIcon, Trash2Icon } from "lucide-react";
 import { TPostsWithAuthorAndLikes } from "@/types";
 import useModal from "@/store/modal/modal-store";
 import { formatDateForTimeline } from "@/lib/formatDate";
-import { useCustomMutation } from "@/hooks/useMutation";
 import { Button } from "@/components/ui/button";
 import HeartButton from "@/components/heart-button";
+import { usePostsMutation } from "@/hooks/usePostsMutation";
 
 interface TimelineBoxProps {
   post: TPostsWithAuthorAndLikes;
@@ -17,7 +17,7 @@ interface TimelineBoxProps {
 const TimelineBox = ({ post, userId }: TimelineBoxProps) => {
   const { openModal, setType, setData } = useModal();
 
-  const { deleteMutation } = useCustomMutation();
+  const { deleteMutation } = usePostsMutation();
   const { mutate: deletePost, isPending: isDeletePending } = deleteMutation;
 
   const handleImageClick = () => {

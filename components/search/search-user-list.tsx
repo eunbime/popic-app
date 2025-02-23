@@ -1,10 +1,10 @@
 "use client";
 
-import { getSearchUserList } from "@/api/user";
 import { User } from "@prisma/client";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import UserAvatar from "../common/user-avatar";
 import { useRouter } from "next/navigation";
+
+import { useUserListByFilter } from "@/hooks/user/useUserListByFilter";
+import UserAvatar from "@/components/common/user-avatar";
 
 interface SearchUserListProps {
   keyword: string;
@@ -14,15 +14,7 @@ interface SearchUserListProps {
 const SearchUserList = ({ keyword, order }: SearchUserListProps) => {
   const router = useRouter();
 
-  const { data } = useInfiniteQuery({
-    queryKey: ["search-user-list", keyword, order],
-    queryFn: () => getSearchUserList(keyword, 10, 0, order),
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.length === 10 ? pages.length * 10 : undefined;
-    },
-    initialPageParam: 0,
-    enabled: !!keyword,
-  });
+  const { data } = useUserListByFilter(keyword, order);
 
   const handleUserClick = (userId: string) => {
     router.push(`/gallery/${userId}`);

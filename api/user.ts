@@ -1,5 +1,6 @@
-import { User } from "@prisma/client";
 import axios from "axios";
+
+import { User } from "@prisma/client";
 
 export const getUser = async (): Promise<User> => {
   const res = await axios.get("/api/user");
@@ -9,18 +10,17 @@ export const getUser = async (): Promise<User> => {
 export const getUserById = async (userId: string): Promise<User> => {
   const isServer = typeof window === "undefined";
 
-  const baseUrl = isServer
-    ? `${process.env.NEXT_PUBLIC_API_URL}/api/user/${userId}`
-    : `/api/user/${userId}`;
-
-  const res = await axios.get(baseUrl, {
-    ...(isServer && {
-      headers: {
-        "Cache-Control": "no-store",
-      },
-    }),
-  });
-  return res.data.user;
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/user/${userId}`,
+    {
+      ...(isServer && {
+        headers: {
+          "Cache-Control": "no-store",
+        },
+      }),
+    }
+  );
+  return data.user;
 };
 
 export const checkFollowing = async (userId: string): Promise<boolean> => {

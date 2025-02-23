@@ -3,21 +3,21 @@
 import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { cn } from "@/lib/utils";
 import { PostUploadSchema } from "@/schemas";
+import useUser from "@/store/user/user-store.";
 import useModal from "@/store/modal/modal-store";
-import { useCustomMutation } from "@/hooks/useMutation";
+import { usePostsMutation } from "@/hooks/usePostsMutation";
 import DatePicker from "@/components/gallery/date-picker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import PrivateSwitch from "@/components/gallery/private-switch";
 import FileUpload from "@/components/file-upload";
-import { useQueryClient } from "@tanstack/react-query";
-import useUser from "@/store/user/user-store.";
-import TagsForm from "../form/tags-form";
+import TagsForm from "@/components/form/tags-form";
 
 const PostUploadModal = () => {
   const {
@@ -34,7 +34,7 @@ const PostUploadModal = () => {
 
   const queryClient = useQueryClient();
 
-  const { uploadMutation, editMutation } = useCustomMutation();
+  const { uploadMutation, editMutation } = usePostsMutation();
   const { mutateAsync: uploadPost, isPending: isUploadPending } =
     uploadMutation;
   const { mutateAsync: editPost, isPending: isEditPending } = editMutation;
@@ -115,7 +115,10 @@ const PostUploadModal = () => {
       }
     } catch (error) {
       setIsSettling(false);
-      console.log("[POST_SUBMIT_ERROR]", error);
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("알 수 없는 오류가 발생했습니다.");
     }
   };
 

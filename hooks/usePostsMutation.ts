@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PostUploadSchema } from "@/schemas";
 import { TPostWithLikes } from "@/types";
 
-export const useCustomMutation = () => {
+export const usePostsMutation = () => {
   const queryClient = useQueryClient();
 
   const uploadMutation = useMutation({
@@ -24,9 +24,13 @@ export const useCustomMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts", null] });
       queryClient.invalidateQueries({ queryKey: ["post-dates"] });
+      queryClient.invalidateQueries({ queryKey: ["posts-by-date"] });
     },
     onError: (error) => {
-      console.log("[POST_UPLOAD_ERROR]", error);
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("업로드에 실패했습니다.");
     },
   });
 
@@ -40,7 +44,10 @@ export const useCustomMutation = () => {
       queryClient.invalidateQueries({ queryKey: ["posts-by-date"] });
     },
     onError: (error) => {
-      console.log("[DELETE_POST_ERROR]", error);
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("삭제에 실패했습니다.");
     },
   });
 
@@ -59,11 +66,17 @@ export const useCustomMutation = () => {
       queryClient.invalidateQueries({
         queryKey: ["posts"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["posts", null],
+      });
       queryClient.invalidateQueries({ queryKey: ["post-dates"] });
       queryClient.invalidateQueries({ queryKey: ["posts-by-date"] });
     },
     onError: (error) => {
-      console.log("[POST_EDIT_ERROR]", error);
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("수정에 실패했습니다.");
     },
   });
 

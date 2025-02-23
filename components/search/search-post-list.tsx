@@ -1,8 +1,6 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-
-import { getSearchPostList } from "@/api/posts";
 import { TPostsWithAuthorAndLikes } from "@/types";
-import PostBox from "../feed/post-box";
+import { useInfinitePostsByFilter } from "@/hooks/posts/useInfinitePostsByFilter";
+import PostBox from "@/components/feed/post-box";
 
 interface SearchPostListProps {
   keyword: string;
@@ -10,15 +8,7 @@ interface SearchPostListProps {
 }
 
 const SearchPostList = ({ keyword, order }: SearchPostListProps) => {
-  const { data } = useInfiniteQuery({
-    queryKey: ["search-post-list", keyword, order],
-    queryFn: () => getSearchPostList(keyword, 10, 0, order),
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.length === 10 ? pages.length * 10 : undefined;
-    },
-    initialPageParam: 0,
-    enabled: !!keyword,
-  });
+  const { data } = useInfinitePostsByFilter(keyword, order);
 
   return (
     <div className="w-[80%] pb-20">

@@ -3,8 +3,8 @@ import Image from "next/image";
 import { TPostsWithAuthorAndLikes } from "@/types";
 import useModal from "@/store/modal/modal-store";
 import useUser from "@/store/user/user-store.";
-import HeartButton from "../heart-button";
-import UserAvatar from "../common/user-avatar";
+import HeartButton from "@/components/heart-button";
+import UserAvatar from "@/components/common/user-avatar";
 
 interface PostBoxProps {
   post: TPostsWithAuthorAndLikes;

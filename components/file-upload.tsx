@@ -51,11 +51,10 @@ const FileUpload = ({ onChange, value, endpoint }: FileUploadProps) => {
         setImageUrl(res[0].url);
         onChange(res[0].url);
       }}
-      onUploadProgress={(progress) => {
-        console.log(progress);
-      }}
       onUploadError={(error) => {
-        console.log(error);
+        if (error instanceof Error) {
+          throw new Error(error.message);
+        }
       }}
     />
   );
