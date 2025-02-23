@@ -25,7 +25,12 @@ export async function GET(
 
     return NextResponse.json(posts);
   } catch (error) {
-    console.log("[POST_BY_USERID_ERROR]", error);
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { message: "Failed to fetch posts", error: error.message },
+        { status: 500 }
+      );
+    }
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

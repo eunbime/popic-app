@@ -17,9 +17,14 @@ export async function GET() {
 
     return NextResponse.json({ message: "User fetched successfully", user });
   } catch (error) {
-    console.error("[USER_GET_ERROR]", error);
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: "Internal server error", message: error.message },
+        { status: 500 }
+      );
+    }
     return NextResponse.json(
-      { message: "Error fetching user", error },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
@@ -41,9 +46,14 @@ export async function PUT(req: Request) {
 
     return NextResponse.json({ message: "User updated successfully", user });
   } catch (error) {
-    console.error("[USER_PUT_ERROR]", error);
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: "Internal server error", message: error.message },
+        { status: 500 }
+      );
+    }
     return NextResponse.json(
-      { message: "Error updating user", error },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

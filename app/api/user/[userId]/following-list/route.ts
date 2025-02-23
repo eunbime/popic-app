@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function GET(
-  req: Request,
+  _: Request,
   { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
@@ -32,7 +32,12 @@ export async function GET(
 
     return NextResponse.json(following?.following || []);
   } catch (error) {
-    console.log("[USER_FOLLOWING_LIST_GET_ERROR]", error);
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: "Internal server error", message: error.message },
+        { status: 500 }
+      );
+    }
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

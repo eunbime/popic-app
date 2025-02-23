@@ -46,9 +46,14 @@ export async function GET(request: Request) {
 
     return NextResponse.json(likedPosts);
   } catch (error) {
-    console.error("[LIKED_POSTS_GET_ERROR]", error);
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { message: "Failed to fetch liked posts", error: error.message },
+        { status: 500 }
+      );
+    }
     return NextResponse.json(
-      { success: false, error: "Internal server error" },
+      { message: "Failed to fetch liked posts" },
       { status: 500 }
     );
   }
@@ -101,7 +106,15 @@ export async function POST(req: NextRequest) {
       likesCount: updatedPost?.likes.length || 0,
     });
   } catch (error) {
-    console.error("[LIKE_ERROR]", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { message: "Failed to like post", error: error.message },
+        { status: 500 }
+      );
+    }
+    return NextResponse.json(
+      { message: "Failed to like post" },
+      { status: 500 }
+    );
   }
 }

@@ -97,7 +97,12 @@ export async function GET(
 
     return Response.json(result);
   } catch (error) {
-    console.error("[POSTS_DATE_GROUPS_GET_ERROR]", error);
+    if (error instanceof Error) {
+      return Response.json(
+        { message: "Failed to fetch date groups", error: error.message },
+        { status: 500 }
+      );
+    }
     return Response.json(
       { message: "Failed to fetch date groups" },
       { status: 500 }
