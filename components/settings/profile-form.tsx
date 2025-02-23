@@ -1,29 +1,26 @@
 "use client";
 
+import { useEffect, useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import axios from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { ProfileSchema } from "@/schemas";
+import useModal from "@/store/modal/modal-store";
+import { useUser } from "@/hooks/user/useUser";
 import FileUpload from "@/components/file-upload";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "../ui/button";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUser } from "@/api/user";
-import { useEffect, useMemo } from "react";
-import axios from "axios";
-import useModal from "@/store/modal/modal-store";
+import { Button } from "@/components/ui/button";
 
 const ProfileForm = () => {
   const queryClient = useQueryClient();
 
   const { openModal, setType, setData } = useModal();
 
-  const { data: userData } = useQuery({
-    queryKey: ["user"],
-    queryFn: () => getUser(),
-  });
+  const { data: userData } = useUser();
 
   const initialValues = useMemo(
     () => ({

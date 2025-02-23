@@ -43,7 +43,9 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     });
     return { success: "로그인이 성공했습니다." };
   } catch (error) {
-    console.log(error);
+    if (error instanceof Error) {
+      return { error: error.message };
+    }
     return { error: "알 수 없는 오류가 발생했습니다." };
   }
 };

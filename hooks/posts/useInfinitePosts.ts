@@ -1,12 +1,12 @@
-import { useEffect } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
-
-import { TPostsWithAuthorAndLikes } from "@/types";
 import { getFeedPosts, getPostsByDate } from "@/api/posts";
+import { TPostsWithAuthorAndLikes } from "@/types";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 const POSTS_PER_PAGE = 5;
 
 interface UseInfinitePostsProps {
+  category: "feed" | "like" | "timeline";
   selectedDate?: Date | null;
   selectedFilter?: string | null;
   userId?: string | null;
@@ -14,6 +14,7 @@ interface UseInfinitePostsProps {
 }
 
 export const useInfinitePosts = ({
+  category,
   selectedDate,
   selectedFilter,
   userId,
@@ -26,7 +27,7 @@ export const useInfinitePosts = ({
     isFetchingNextPage,
     status,
   } = useInfiniteQuery<TPostsWithAuthorAndLikes[]>({
-    queryKey: ["posts", selectedDate || selectedFilter],
+    queryKey: ["posts", category, selectedDate || selectedFilter],
     queryFn: async ({ pageParam = 1 }) => {
       if (selectedDate) {
         return getPostsByDate(

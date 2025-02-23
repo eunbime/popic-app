@@ -101,7 +101,9 @@ const RegisterForm = () => {
           await register(values);
           router.push("/auth/login");
         } catch (error) {
-          console.log(error);
+          if (error instanceof Error) {
+            throw new Error(error.message);
+          }
         }
       });
     }

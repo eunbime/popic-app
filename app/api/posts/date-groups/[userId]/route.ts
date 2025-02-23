@@ -17,7 +17,6 @@ export async function GET(
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    console.log({ beforeDate });
     // 먼저 날짜만 추출하여 고유한 날짜 목록 가져오기
     const uniqueDates = await db.post.findMany({
       where: {
@@ -97,7 +96,12 @@ export async function GET(
 
     return Response.json(result);
   } catch (error) {
-    console.error("[POSTS_DATE_GROUPS_GET_ERROR]", error);
+    if (error instanceof Error) {
+      return Response.json(
+        { message: "Failed to fetch date groups", error: error.message },
+        { status: 500 }
+      );
+    }
     return Response.json(
       { message: "Failed to fetch date groups" },
       { status: 500 }

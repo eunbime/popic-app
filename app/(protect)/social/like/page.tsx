@@ -1,18 +1,16 @@
-import { getLikePosts } from "@/api/posts";
-import LikePostList from "@/components/like/like-post-list";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
 
+import { prefetchListPosts } from "@/hooks/posts/useLikePosts";
+import LikePostList from "@/components/like/like-post-list";
+
 export default async function Like() {
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: ["like-posts", "all"],
-    queryFn: () => getLikePosts("all"),
-  });
+  await prefetchListPosts(queryClient);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

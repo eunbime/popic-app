@@ -53,8 +53,6 @@ const SearchForm = ({ search, setSearch, setKeyword }: SearchFormProps) => {
     setSearch(keyword);
   };
 
-  // TODO: 유효성 검사
-
   return (
     <>
       <form

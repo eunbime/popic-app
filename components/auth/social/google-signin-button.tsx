@@ -5,7 +5,6 @@ import { FcGoogle } from "react-icons/fc";
 
 const GoogleSigninButton = () => {
   const handleGoogleSignin = async () => {
-    console.log("Google Signin Button Clicked");
     try {
       const result = await signIn("google");
       if (result?.error) {

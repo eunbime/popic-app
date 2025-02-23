@@ -2,9 +2,8 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
-// 언팔로우하기
 export async function POST(
-  req: Request,
+  _: Request,
   { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
@@ -31,7 +30,15 @@ export async function POST(
 
     return NextResponse.json({ message: "Successfully unfollowed" });
   } catch (error) {
-    console.log("[USER_UNFOLLOW_POST_ERROR]", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: "Internal server error", message: error.message },
+        { status: 500 }
+      );
+    }
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

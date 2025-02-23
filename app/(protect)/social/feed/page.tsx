@@ -4,9 +4,8 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
-import { TPostsWithAuthorAndLikes } from "@/types";
 import { auth } from "@/lib/auth";
-import { getPostsByDate } from "@/api/posts";
+import { prefetchFeedPosts } from "@/hooks/posts/useFeedPosts";
 import PostList from "@/components/feed/post-list";
 
 export default async function Feed() {
@@ -14,13 +13,8 @@ export default async function Feed() {
   const queryClient = new QueryClient();
   const date = new Date();
 
-  await queryClient.prefetchInfiniteQuery<TPostsWithAuthorAndLikes[]>({
-    queryKey: ["posts", "all"],
-    queryFn: async ({ pageParam = 1 }) => {
-      return getPostsByDate(date, session?.user?.id, pageParam as number, 5);
-    },
-    initialPageParam: 1,
-  });
+  await prefetchFeedPosts(date, session?.user?.id, queryClient);
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="w-full h-full md:px-10">

@@ -30,8 +30,6 @@ const TagsForm = ({ tags = [], onChange }: TagsFormProps) => {
       .filter((tag) => tag !== "")
       .filter((tag, index, self) => self.indexOf(tag) === index); // 중복 제거
 
-    console.log(newTags);
-
     onChange(newTags);
   };
 

@@ -57,7 +57,12 @@ export async function GET(request: Request) {
 
     return Response.json(posts);
   } catch (error) {
-    console.log("[POSTS_BY_DATE_GET]", error);
+    if (error instanceof Error) {
+      return Response.json(
+        { message: "Failed to fetch posts", error: error.message },
+        { status: 500 }
+      );
+    }
     return Response.json({ message: "Failed to fetch posts" }, { status: 500 });
   }
 }

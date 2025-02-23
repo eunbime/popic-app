@@ -47,7 +47,12 @@ export async function PUT(
 
     return NextResponse.json(updatedPost);
   } catch (error) {
-    console.log("[POSTS_PUT_ERROR]", error);
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { message: "Failed to update post", error: error.message },
+        { status: 500 }
+      );
+    }
     return NextResponse.json(
       { message: "Failed to update post" },
       { status: 500 }
@@ -85,7 +90,12 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Post deleted", status: 200 });
   } catch (error) {
-    console.log("[POSTS_DELETE_ERROR]", error);
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { message: "Failed to delete post", error: error.message },
+        { status: 500 }
+      );
+    }
     return NextResponse.json(
       { message: "Failed to delete post" },
       { status: 500 }

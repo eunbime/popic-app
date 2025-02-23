@@ -34,7 +34,11 @@ const LoginForm = () => {
         }
       });
     } catch (error) {
-      console.log(data, error);
+      if (error instanceof Error) {
+        form.setError("email", { message: error.message });
+      } else {
+        form.setError("email", { message: "알 수 없는 오류가 발생했습니다." });
+      }
     }
   };
 
