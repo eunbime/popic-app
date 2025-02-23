@@ -7,9 +7,9 @@ import { TPostsWithAuthorAndLikes } from "@/types";
 import { formatDateForTimeline } from "@/lib/formatDate";
 import useUser from "@/store/user/user-store.";
 import useModal from "@/store/modal/modal-store";
-import { useScrollLock } from "@/hooks/use-scroll-lock";
-import { useCustomMutation } from "@/hooks/useMutation";
-import UserAvatar from "../common/user-avatar";
+import { useScrollLock } from "@/hooks/useScrollLock";
+import { usePostsMutation } from "@/hooks/usePostsMutation";
+import UserAvatar from "@/components/common/user-avatar";
 
 const PostUploadModal = () => {
   const { user } = useUser();
@@ -24,7 +24,7 @@ const PostUploadModal = () => {
     setData,
   } = useModal();
 
-  const { deleteMutation } = useCustomMutation();
+  const { deleteMutation } = usePostsMutation();
   const { mutate: deletePost, isPending: isDeletePending } = deleteMutation;
 
   useScrollLock(isOpen);

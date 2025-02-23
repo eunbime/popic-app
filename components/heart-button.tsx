@@ -1,6 +1,7 @@
-import { useLike } from "@/hooks/uselike";
-import { TPostWithLikes } from "@/types";
 import { IoHeart, IoHeartOutline } from "react-icons/io5";
+
+import { TPostWithLikes } from "@/types";
+import { useLike } from "@/hooks/uselike";
 
 interface HeartButtonProps {
   post: TPostWithLikes;

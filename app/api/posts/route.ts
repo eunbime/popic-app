@@ -10,7 +10,12 @@ export async function GET() {
     });
     return NextResponse.json(posts);
   } catch (error) {
-    console.log("[POSTS_GET_ERROR]", error);
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { message: "Failed to fetch posts", error: error.message },
+        { status: 500 }
+      );
+    }
     return NextResponse.json(
       { message: "Failed to fetch posts" },
       { status: 500 }
@@ -19,18 +24,31 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const data = await req.json();
+  try {
+    const data = await req.json();
 
-  const post = await db.post.create({
-    data: data,
-  });
+    const post = await db.post.create({
+      data: data,
+    });
 
-  if (!post) {
+    if (!post) {
+      return NextResponse.json(
+        { message: "Failed to create post" },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ message: "Post uploaded" });
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { message: "Failed to create post", error: error.message },
+        { status: 500 }
+      );
+    }
     return NextResponse.json(
       { message: "Failed to create post" },
       { status: 500 }
     );
   }
-
-  return NextResponse.json({ message: "Post uploaded" });
 }

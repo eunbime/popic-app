@@ -1,5 +1,6 @@
-import { signOut } from "@/lib/auth";
 import Link from "next/link";
+
+import { signOut } from "@/lib/auth";
 
 export default function Settings() {
   const handleLogout = async () => {

@@ -1,20 +1,17 @@
-import { auth } from "@/lib/auth";
-import CalendarComponent from "../_components/CalendarComponent";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { getPostsByUserId } from "@/api/posts";
+
+import { auth } from "@/lib/auth";
+import { prefetchPostsByUserId } from "@/hooks/posts/usePostsByUserId";
+import CalendarComponent from "../_components/CalendarComponent";
 
 export default async function CalendarPage() {
   const session = await auth();
   const queryClient = new QueryClient();
-
-  await queryClient.prefetchQuery({
-    queryKey: ["posts", session?.user?.id],
-    queryFn: () => getPostsByUserId(session?.user?.id),
-  });
+  await prefetchPostsByUserId(session?.user?.id, queryClient);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
